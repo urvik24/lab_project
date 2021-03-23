@@ -1,0 +1,6 @@
+,patient_name,mobile,id_number,address,age,gender,date,treatment_given,additional_remarks,doctor_name
+0,1,9819029122,5,1,12,MALE,3/23/21,NONE,NONE,
+1,Darsh,1234567890,4,Kandivali,21,MALE,3/23/21,NONE,Good,
+2,Ishani,7718801199,2,Mulund West,20,MALE,3/12/21,Covid,,
+3,Unnati,7208824000,3,Matunga,22,MALE,3/2/21,Bandage,Recovered,
+4,Urvik,9969799293,1,Mulund,22,MALE,3/23/21,,,

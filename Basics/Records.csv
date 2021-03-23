@@ -1,0 +1,7 @@
+,patient_name,mobile,id_number,address,age,sex,date,treatment_given,additional_remarks,doctor_name
+0,Bhagodi,7021211998,3,Mumbai,22,Female,2021-03-22,Bandage,Marr gya parshva,
+1,Darsh,9876543201,4,Kolkata,20,Male,2021-03-21,Covid,Died,
+2,femin,0,1,Mumbai,22,male,2021-03-22,bandage,mar gya femin,
+3,Ishani,7718801199,6,Mumbai,22,Female,2021-02-11,Covid,Died,
+4,sorry sorry,9969799293,2,mumbai,22,Male,2021-03-22,Bandage,Good,
+5,Urvik,9029890600,5,Delhi,21,Male,2021-03-20,Covid,Died,

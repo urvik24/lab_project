@@ -135,7 +135,7 @@ class newlogin():
                 self.entry_pass.delete(0,END)
                 self.entry_conpass.delete(0,END)
         
-main()
+#main()
 
 
 

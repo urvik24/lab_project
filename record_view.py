@@ -20,4 +20,5 @@ def main():
     r = mycursor.fetchall()
     df = pd.DataFrame(r)
     print(df)
-#main()
+
+main()

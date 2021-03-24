@@ -3,6 +3,8 @@ from pymysql import*
 import xlwt
 import pandas.io.sql as sql
 import pandas as pd
+from tkinter import *
+from pandastable import Table, TableModel
 
 mydb=mysql.connector.connect(
     host="localhost",
@@ -12,13 +14,24 @@ mydb=mysql.connector.connect(
 )
 mycursor=mydb.cursor()
 
-def main():
-    #df=sql.read_sql('select * from patient_record',mydb)
-    #print(df)
-    #df.to_csv('Records.csv')
-    mycursor.execute("Select * from patient_record")
-    r = mycursor.fetchall()
-    df = pd.DataFrame(r)
-    print(df)
 
-main()
+class main(Frame):
+    def __init__(self, parent=None):
+        self.parent = parent
+        Frame.__init__(self)
+        self.main = self.master
+        self.main.geometry('600x400')
+        self.main.title('Display')
+        self.f = Frame(self.main)
+        self.f.pack(fill=BOTH,expand=1)
+        self.disp()
+    def disp(self):
+        mycursor.execute("Select * from patient_record")
+        r = mycursor.fetchall()
+        df = pd.DataFrame(r)
+        df.to_csv('Records.csv')
+        self.table = pt = Table(self.f, dataframe=df,showstatusbar=True)
+        pt.show()
+        #print(df)
+
+#main()

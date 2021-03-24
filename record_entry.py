@@ -7,6 +7,9 @@ from pymysql import*
 import xlwt
 import pandas.io.sql as sql
 import pandas as pd
+#import record
+import record_main
+import record_view
 
 mydb=mysql.connector.connect(
     host="localhost",
@@ -18,14 +21,25 @@ mycursor=mydb.cursor()
 
 def main():
     root=Tk()
-    app=record(root)
+    app=record_entry(root)
     
 
-class record:
-    def __init__(self,root):
+class record_entry():
+    def __init__(self,root, parent = None):
         self.root = root
         self.root.geometry('500x550')
-        self.root.title("Record Entry")
+        self.root.title("Record entry")
+        
+        '''self.parent = parent
+        Frame.__init__(self)
+        self.main = self.master
+        self.main.geometry('600x600+200+100')
+        self.main.title("Record Entry")
+        f = Frame(self.main)
+        f.pack(fill=BOTH,expand=1)'''
+        self.page()
+
+    def page(self):
 
         self.label_0 = Label(self.root, text="ENTER THE PATIENT DETAILS",font=("Times New Roman", 20))
         self.label_0.place(x=50,y=2)
@@ -40,7 +54,7 @@ class record:
 
         self.cb = IntVar()
         self.Combo = Combobox(self.root,textvariable=self.cb,width=5, values = ('+91','022','Other'))
-        self.Combo.grid(column=1,row=15)
+        #self.Combo.grid()
         self.Combo.current(0)
         self.Combo.place(x=200,y=100)
         self.entry_mobile = Entry(self.root)
@@ -52,7 +66,7 @@ class record:
         self.entry_id.place(x=200,y=140)
         i = 10
         self.label_id = Label(self.root, text="(Last entered ID is %d)"%(i),width=20,font=("bold", 8))
-        self.label_id.place(x=200,y=160)
+        self.label_id.place(x=200,y=162)
 
         self.label_add = Label(self.root, text="Address",width=20,font=("bold", 10))
         self.label_add.place(x=50,y=180)
@@ -97,28 +111,28 @@ class record:
         self.entry_remark = Entry(self.root,width=40)
         self.entry_remark.place(x=200,y=420)
 
-        self.b= Button(self.root, text='Submit',width=10,command=self.validate).place(x=170,y=460)
-        self.b1= Button(self.root, text='Clear',width=10,command=self.cleardata).place(x=270,y=460)
-        self.b2= Button(self.root, text='Back',width=10,command=self.cleardata).place(x=220,y=500)
-        self.root.mainloop()
-        
-        
-
+        self.b1= Button(self.root, text='Submit',width=15,command=self.validate).place(x=170,y=460)
+        self.b2= Button(self.root, text='Clear',width=10,command=self.cleardata).place(x=270,y=460)
+        self.b3= Button(self.root, text='View Records',width=15,command=self.view).place(x=170,y=500)
+        self.b4= Button(self.root, text='Back',width=10,command=self.back).place(x=270,y=500)
+   
     def entry(self):
         name = str(self.entry_name.get())
         mobile = str(self.entry_mobile.get())
         id_no = str(self.entry_id.get())
         address = str(self.entry_add.get())
         age = str(self.entry_age.get())
-        gend = str(self.radio.get())
+        gend = int(self.radio.get())
         if(gend == 2):
             gender = "FEMALE"
-        else:
+        elif(gend == 1):
             gender = "MALE"
         date = str(self.cal.get())
         doctor_name = str(self.entry_doctor.get())
+        print(doctor_name)
         if(doctor_name == ""):
             doctor_name = "NONE"
+            print(doctor_name)
         #multiple doctors
         treatment = str(self.entry_treatment.get())
         if(treatment == ""):
@@ -130,28 +144,34 @@ class record:
         if not ((self.entry_name.get()) and (self.entry_mobile.get()) and (self.entry_id.get()) and (self.entry_add.get()) and (self.entry_age.get()) and (self.cal.get())):
             messagebox.showinfo("ERROR","Enter Details first and then click on Submit Button")  
         else:
-            mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,treatment,remarks))
+            mycursor.execute("insert into doctor(id_number,doctor_name)values('%s','%s')" %(id_no,doctor_name))
+            mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,doctor_name,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,doctor_name,treatment,remarks))
             mydb.commit()
             messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
-            self.cleardata()
+            resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
+            if resp == "yes":
+                self.cleardata()
+            else:
+                self.cleardata()
+                self.back()
 
     def validate(self):
         if not self.entry_name.get():
-            messagebox.showinfo("WARNING","Enter the Patient's Name")
+            messagebox.showwarning("WARNING","Enter the Patient's Name")
         if not self.entry_mobile.get():
-            messagebox.showinfo("WARNING","Enter Mobile Number")
+            messagebox.showwarning("WARNING","Enter Mobile Number")
         if self.entry_mobile.get():
             if self.entry_mobile.get().isdigit() == False:
-                messagebox.showinfo("WARNING","Enter Only Numerical Values in Mobile Number Field")
+                messagebox.showwarning("WARNING","Enter Only Numerical Values in Mobile Number Field")
                 self.entry_mobile.delete(0,END)
             else:
                 if self.Combo.get() == "+91":
                     if len(str(self.entry_mobile.get())) != 10:
-                           messagebox.showinfo("WARNING","Incorrect Mobile Number\nEnter Mobile Number Again")
+                           messagebox.showerror("ERROR","Incorrect Mobile Number\nEnter Mobile Number Again")
                            self.entry_mobile.delete(0,END)
                 if self.Combo.get() == "022":
                     if len(str(self.entry_mobile.get())) != 8:
-                            messagebox.showinfo("WARNING","Incorrect Landline Number\nEnter Landline Number Again")
+                            messagebox.showerror("ERROR","Incorrect Landline Number\nEnter Landline Number Again")
                             self.entry_mobile.delete(0,END)
         if not self.entry_id.get():
             messagebox.showinfo("WARNING","Enter the Patient's ID")
@@ -166,15 +186,15 @@ class record:
                 s = str(w)
                 t = "("+q+",)"
                 if(s==t):
-                    messagebox.showinfo("MESSAGE","ID Already Exists")
+                    messagebox.showerror("ERROR","ID Already Exists")
                     self.entry_id.delete(0,END)
         if not self.entry_add.get():
-            messagebox.showinfo("WARNING","Enter the Patient's Address")
+            messagebox.showwarning("WARNING","Enter the Patient's Address")
         if not self.entry_age.get():
-            messagebox.showinfo("WARNING","Enter the Patient's Age")
+            messagebox.showwarning("WARNING","Enter the Patient's Age")
         else:
             if self.entry_age.get().isdigit() == False:
-                messagebox.showinfo("WARNING","Enter Only Numerical Values in the Age Field")
+                messagebox.showerror("ERROR","Enter Only Numerical Values in the Age Field")
                 self.entry_age.delete(0,END)
         if not self.cal.get():
             messagebox.showinfo("WARNING","Select Date")
@@ -190,5 +210,12 @@ class record:
         self.cal.delete(0,END)
         self.entry_treatment.delete(0,END)
         self.entry_remark.delete(0,END)
+        self.radio.set(1)
+
+    def back(self):
+        record_main.main()
+        
+    def view(self):
+        record_view.main()
             
 #main()

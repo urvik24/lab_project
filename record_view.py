@@ -25,6 +25,8 @@ class main(Frame):
         self.f.pack(fill=BOTH,expand=1)
         self.disp()
     def disp(self):
+        
+
         mycursor.execute("Select * from patient_record")
         r = mycursor.fetchall()
         df = pd.DataFrame(r)
@@ -32,6 +34,5 @@ class main(Frame):
         df.to_csv('Records.csv')
         self.table = pt = Table(self.f, dataframe=df,showstatusbar=True)
         pt.show()
-        #print(df)
-
+        pt.close()
 #main()

@@ -4,6 +4,7 @@ from tkinter import messagebox
 import record_entry
 import login_main
 import record_view
+import record_display
 
 mydb=mysql.connector.connect(
     host="localhost",
@@ -33,7 +34,7 @@ class record():
     def direction(self):
         record_entry.main()
     def direction1(self):
-        record_view.main()
+        record_display.main()
 #doctors
 #print krne ka hai
 #style

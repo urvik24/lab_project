@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 import login_main
+import record_view
 
 def main():
     root=Tk()
@@ -17,6 +18,6 @@ class windowmain:
         login_main.main()
 
     def login1(self):
-        login_main.main()
+        record_view.main()
 
 #main()

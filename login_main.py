@@ -1,7 +1,7 @@
 from tkinter import *
 import mysql.connector
 from tkinter import messagebox
-#import record
+import login
 import record_main
 import login_register
 mydb=mysql.connector.connect(
@@ -43,7 +43,7 @@ class loginmain():
         
         self.b= Button(self.root, text='Submit',width=20,bg='brown',fg='white',command=self.submit).place(x=180,y=260)
         self.b1= Button(self.root, text='Register',width=20,bg='brown',fg='white',command=self.register).place(x=180,y=320)
-        self.b2= Button(self.root, text='Back',width=10,bg='brown',fg='white',command=self.register).place(x=210,y=360)
+        self.b2= Button(self.root, text='Back',width=10,bg='brown',fg='white',command=self.back).place(x=210,y=360)
         
         self.root.mainloop()
 
@@ -76,6 +76,9 @@ class loginmain():
                     record_main.main()
     def register(self):
         login_register.main()
+
+    def back(self):
+        login.main()
         
     
             

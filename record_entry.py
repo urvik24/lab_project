@@ -7,7 +7,6 @@ from pymysql import*
 import xlwt
 import pandas.io.sql as sql
 import pandas as pd
-#import record
 import record_main
 import record_view
 
@@ -25,18 +24,12 @@ def main():
     
 
 class record_entry():
-    def __init__(self,root, parent = None):
+    def __init__(self,root):
+        
+
         self.root = root
         self.root.geometry('500x550')
         self.root.title("Record entry")
-        
-        '''self.parent = parent
-        Frame.__init__(self)
-        self.main = self.master
-        self.main.geometry('600x600+200+100')
-        self.main.title("Record Entry")
-        f = Frame(self.main)
-        f.pack(fill=BOTH,expand=1)'''
         self.page()
 
     def page(self):
@@ -55,6 +48,7 @@ class record_entry():
         self.cb = IntVar()
         self.Combo = Combobox(self.root,textvariable=self.cb,width=5, values = ('+91','022','Other'))
         #self.Combo.grid()
+        self.Combo['state'] = 'readonly'
         self.Combo.current(0)
         self.Combo.place(x=200,y=100)
         self.entry_mobile = Entry(self.root)
@@ -83,11 +77,21 @@ class record_entry():
         self.radio = IntVar()
         self.radio.set(1)
         self.radio_opt = {1 : 'MALE', 2: "FEMALE"}
-        selection = str(self.radio.get())
+        '''selection = self.radio.get()
+        selection1 = self.radio.get()
+        print(selection)
+        print(selection1)
         self.R1 = Radiobutton(self.root, text=self.radio_opt[1], variable=self.radio, value=1, command=selection)
-        self.R2 = Radiobutton(self.root, text=self.radio_opt[2], variable=self.radio, value=2, command=selection)
+        self.R2 = Radiobutton(self.root, text=self.radio_opt[2], variable=self.radio, value=2, command=selection1)
         self.R1.place(x=200,y=260)
-        self.R2.place(x=260,y=260)
+        self.R2.place(x=260,y=260)'''
+
+        self.cb1 = IntVar()
+        self.Combo1 = Combobox(self.root,textvariable=self.cb1,width=10, values = ('Male','Female'))
+        #self.Combo.grid()
+        self.Combo1['state'] = 'readonly'
+        self.Combo1.current(0)
+        self.Combo1.place(x=220,y=260)
         
 
         self.label_date = Label(self.root, text="Date",width=20,font=("bold", 10))
@@ -122,17 +126,18 @@ class record_entry():
         id_no = str(self.entry_id.get())
         address = str(self.entry_add.get())
         age = str(self.entry_age.get())
-        gend = int(self.radio.get())
-        if(gend == 2):
+        gender = str(self.Combo1.get())
+
+        '''if(gend == 2):
+            print("FEMALE")
             gender = "FEMALE"
         elif(gend == 1):
-            gender = "MALE"
+            print("MALE")
+            gender = "MALE"'''
         date = str(self.cal.get())
         doctor_name = str(self.entry_doctor.get())
-        print(doctor_name)
         if(doctor_name == ""):
             doctor_name = "NONE"
-            print(doctor_name)
         #multiple doctors
         treatment = str(self.entry_treatment.get())
         if(treatment == ""):
@@ -213,6 +218,7 @@ class record_entry():
         self.radio.set(1)
 
     def back(self):
+        self.root.deiconify()
         record_main.main()
         
     def view(self):

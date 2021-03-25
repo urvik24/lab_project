@@ -14,7 +14,6 @@ mydb=mysql.connector.connect(
 )
 mycursor=mydb.cursor()
 
-
 class main(Frame):
     def __init__(self, parent=None):
         self.parent = parent
@@ -29,6 +28,7 @@ class main(Frame):
         mycursor.execute("Select * from patient_record")
         r = mycursor.fetchall()
         df = pd.DataFrame(r)
+        df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender","Date","Doctor Name","Treatment Given","Additional Remarks"]
         df.to_csv('Records.csv')
         self.table = pt = Table(self.f, dataframe=df,showstatusbar=True)
         pt.show()

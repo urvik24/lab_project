@@ -1,10 +1,11 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
-from tkcalendar import Calendar,DateEntry
 import mysql.connector
 from pymysql import*
 import xlwt
+import datetime
+from datetime import timedelta
 import pandas.io.sql as sql
 import pandas as pd
 import record_main
@@ -58,6 +59,8 @@ class record_entry():
         self.label_id.place(x=50,y=140)
         self.entry_id = Entry(self.root)
         self.entry_id.place(x=200,y=140)
+        #n = mycursor.execute("Select * from patient_records")
+        #print(n)
         i = 10
         self.label_id = Label(self.root, text="(Last entered ID is %d)"%(i),width=20,font=("bold", 8))
         self.label_id.place(x=200,y=162)
@@ -96,9 +99,13 @@ class record_entry():
 
         self.label_date = Label(self.root, text="Date",width=20,font=("bold", 10))
         self.label_date.place(x=50,y=300)
-        self.cal = DateEntry(self.root, width=12, background='darkblue',foreground='white', borderwidth=2)
-        self.cal.pack(padx=10, pady=10)
-        self.cal.place(x=200,y=300)
+        self.x = datetime.datetime.now().strftime("%d-%m-%Y")
+
+        self.label_date1 = Label(self.root, text=self.x,width=20,font=("bold", 10))
+        self.label_date1.place(x=200,y=300)
+        #self.cal = DateEntry(self.root, width=12, background='darkblue',foreground='white', borderwidth=2)
+        #self.cal.pack(padx=10, pady=10)
+        #self.cal.place(x=200,y=300)
 
         self.label_doctor = Label(self.root, text="Referred by ",width=20,font=("bold", 10))
         self.label_doctor.place(x=50,y=340)
@@ -134,7 +141,8 @@ class record_entry():
         elif(gend == 1):
             print("MALE")
             gender = "MALE"'''
-        date = str(self.cal.get())
+        date = str(self.x)
+        print(date)
         doctor_name = str(self.entry_doctor.get())
         if(doctor_name == ""):
             doctor_name = "NONE"
@@ -146,12 +154,12 @@ class record_entry():
         if(remarks == ""):
             remarks = "NONE"
 
-        if not ((self.entry_name.get()) and (self.entry_mobile.get()) and (self.entry_id.get()) and (self.entry_add.get()) and (self.entry_age.get()) and (self.cal.get())):
+        if not ((self.entry_name.get()) and (self.entry_mobile.get()) and (self.entry_id.get()) and (self.entry_add.get()) and (self.entry_age.get()) ):
             messagebox.showinfo("ERROR","Enter Details first and then click on Submit Button")  
         else:
-            mycursor.execute("insert into doctor(id_number,doctor_name)values('%s','%s')" %(id_no,doctor_name))
-            mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,doctor_name,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,doctor_name,treatment,remarks))
-            mydb.commit()
+            #mycursor.execute("insert into doctor(id_number,doctor_name)values('%s','%s')" %(id_no,doctor_name))
+            #mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,doctor_name,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,doctor_name,treatment,remarks))
+            #mydb.commit()
             messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
             resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
             if resp == "yes":
@@ -201,9 +209,8 @@ class record_entry():
             if self.entry_age.get().isdigit() == False:
                 messagebox.showerror("ERROR","Enter Only Numerical Values in the Age Field")
                 self.entry_age.delete(0,END)
-        if not self.cal.get():
-            messagebox.showinfo("WARNING","Select Date")
         self.entry()
+
                           
     def cleardata(self):
         self.entry_name.delete(0,END)
@@ -212,10 +219,11 @@ class record_entry():
         self.entry_age.delete(0,END)
         self.entry_add.delete(0,END)
         self.entry_doctor.delete(0,END)
-        self.cal.delete(0,END)
         self.entry_treatment.delete(0,END)
         self.entry_remark.delete(0,END)
         self.radio.set(1)
+        #self.x = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        #print(self.x)
 
     def back(self):
         self.root.deiconify()

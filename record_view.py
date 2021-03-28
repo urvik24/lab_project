@@ -31,8 +31,33 @@ class main(Frame):
         r = mycursor.fetchall()
         df = pd.DataFrame(r)
         df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender","Date","Doctor Name","Treatment Given","Additional Remarks"]
+        lst = [df.columns.values.tolist()] + df.values.tolist()
         df.to_csv('Records.csv')
         self.table = pt = Table(self.f, dataframe=df,showstatusbar=True)
         pt.show()
-        pt.close()
+        self.back()
+    def back(self):
+        self.table.close()
 #main()
+
+'''self.root = root
+        self.root.geometry('500x500')
+        self.root.title("Record Page")
+        self.view1()
+    def view1(self):
+        mycursor.execute("Select * from patient_record")
+        r = mycursor.fetchall()
+        df = pd.DataFrame(r)
+        df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender","Date","Doctor Name","Treatment Given","Additional Remarks"]
+        lst = [df.columns.values.tolist()] + df.values.tolist()
+        total_rows = len(lst)
+        total_columns = len(lst[0])
+        print(total_rows)
+        print(total_columns)
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.e = Entry(self.root, width=10,font=('Arial',16))
+                self.e.grid(row=i, column=j)
+                self.e.insert(END, lst[i][j])
+        df.to_csv('Records.csv')'''
+        #print(lst)

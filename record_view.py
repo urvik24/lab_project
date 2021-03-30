@@ -1,7 +1,7 @@
 import mysql.connector
 from pymysql import*
-import xlwt
-import pandas.io.sql as sql
+# import xlwt
+# import pandas.io.sql as sql
 import pandas as pd
 from tkinter import *
 from pandastable import Table, TableModel

@@ -3,11 +3,11 @@ from tkinter.ttk import *
 from tkinter import messagebox
 import mysql.connector
 from pymysql import*
-import xlwt
+# import xlwt
 import datetime
 from datetime import timedelta
-import pandas.io.sql as sql
-import pandas as pd
+# import pandas.io.sql as sql
+# import pandas as pd
 import record_main
 import record_view
 

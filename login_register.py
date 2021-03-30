@@ -53,30 +53,33 @@ class newlogin():
 
         mycursor.execute("SELECT login_name from login WHERE login_name='%s'"%(staff_id))
         y = mycursor.fetchone()
-        i = str(y)
-        j = "('"+staff_id+"',)"
-        if(i==j):
-            messagebox.showinfo("WARNING","ID already exists ")
-            self.entry_id.delete(0,END)
-            self.entry_pass.delete(0,END)
-            self.entry_conpass.delete(0,END)
+        if not (y):
+            messagebox.showinfo("WARNING","Enter ID")
         else:
-            if(password!=conpass):
-                messagebox.showinfo("WARNING","Password Doesnt Match ")
-                self.entry_pass.delete(0,END)
-                self.entry_conpass.delete(0,END)
-            else:
-                mycursor.execute("insert into login(login_name,password)values('%s','%s')" %(staff_id,password))
-                mydb.commit()
-                messagebox.showinfo("CREATED","New Login Created")
+            i = str(y)
+            j = "('"+staff_id+"',)"
+            if(i==j):
+                messagebox.showinfo("WARNING","ID already exists ")
                 self.entry_id.delete(0,END)
                 self.entry_pass.delete(0,END)
                 self.entry_conpass.delete(0,END)
-                self.back1()
+            else:
+                if(password!=conpass):
+                    messagebox.showinfo("WARNING","Password Doesnt Match ")
+                    self.entry_pass.delete(0,END)
+                    self.entry_conpass.delete(0,END)
+                else:
+                    mycursor.execute("insert into login(login_name,password)values('%s','%s')" %(staff_id,password))
+                    mydb.commit()
+                    messagebox.showinfo("CREATED","New Login Created")
+                    self.entry_id.delete(0,END)
+                    self.entry_pass.delete(0,END)
+                    self.entry_conpass.delete(0,END)
+                    self.back1()
     def back1(self):
         login_main.main()
 
     def back(self):
         login_main.main()
 
-#main()
+main()

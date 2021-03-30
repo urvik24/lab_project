@@ -1,7 +1,4 @@
 import mysql.connector
-from pymysql import*
-import xlwt
-import pandas.io.sql as sql
 import pandas as pd
 from tkinter import *
 from tkinter.ttk import *
@@ -23,6 +20,8 @@ class Display():
         self.root.geometry('1100x500')
         self.root.maxsize(1100,500)
         self.root.title("Table Display")
+        self.style = Style()
+        self.style.theme_use("clam")
         self.display()
     def display(self):
         mycursor.execute("Select * from patient_record")
@@ -33,8 +32,6 @@ class Display():
         #lst = [df.columns.values.tolist()] + df.values.tolist()
         
         tree = Treeview(self.root,height = 20, column=("c1", "c2", "c3","c4","c5","c6","c7","c8","c9","c10"), show='headings')
-        style = Style()
-        style.theme_use("clam")
         #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
         #style.map("Treeview",background=[('selected','blue')])
         tree.column("#1", anchor=CENTER,minwidth=0, width=100, stretch=NO)

@@ -1,0 +1,508 @@
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+import mysql.connector
+import pandas as pd
+import datetime
+import record_view
+
+LARGEFONT = ("Verdana", 35)
+mydb=mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="urvik9293",
+    database="lab",
+)
+mycursor=mydb.cursor()
+
+class tkinterApp(tk.Tk):
+
+    # __init__ function for class tkinterApp
+    def __init__(self, *args, **kwargs):
+        # __init__ function for class Tk
+        tk.Tk.__init__(self, *args, **kwargs)
+
+        # creating a container
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        frameList = [LoginMain, Register,Record, Record_Entry, Record_Edit, Record_Display]
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+        self.style = ttk.Style()
+        self.style.theme_use("clam")
+        self.frames = {}
+
+        for F in frameList:
+            frame = F(container, self)
+            self.frames[F] = frame
+
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame(LoginMain)
+
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
+
+class LoginMain(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label_0 = tk.Label(self, text="LOGIN CREDENTIALS", font=("Times New Roman", 20), fg='blue')
+        self.label_id = tk.Label(self, text="Staff ID", width=20, font=("bold", 10))
+        self.entry_id = tk.Entry(self)
+        self.label_pass = tk.Label(self, text="Password", width=20, font=("bold", 10))
+        self.entry_pass = tk.Entry(self, show="*")
+        self.label_5 = tk.Label(self, text="New Account?", width=20, font=("bold", 10))
+        self.b = tk.Button(self, text='Submit', width=20, bg='brown', fg='white', command=lambda: self.submit(controller))
+        self.b1 = tk.Button(self, text='Register', width=20, bg='brown', fg='white', command=lambda: controller.show_frame(Register))
+        self.loginpage()
+
+    def loginpage(self):
+        self.label_0.place(x=150,y=50)
+        self.label_id.place(x=80,y=130)
+        self.entry_id.place(x=240,y=130)
+        self.label_pass.place(x=68,y=180)
+        self.entry_pass.place(x=240,y=180)
+        self.label_5.place(x=170,y=290)
+        self.b.place(x=180,y=260)
+        self.b1.place(x=180,y=320)
+
+
+        '''self.label_0.grid(row=0, column=4, padx=10, pady=10)
+        self.label_id.grid(row=1, column=4, padx=10, pady=10)
+        self.entry_id.grid(row=2, column=4, padx=10, pady=10)
+        self.label_pass.grid(row=3, column=4, padx=10, pady=10)
+        self.entry_pass.grid(row=4, column=4, padx=10, pady=10)
+        self.label_5.grid(row=5, column=4, padx=10, pady=10)
+        self.b.grid(row=6, column=4, padx=10, pady=10)
+        self.b1.grid(row=7, column=4, padx=10, pady=10)'''
+    def submit(self,controller):
+        a=str(self.entry_id.get())
+        b=str(self.entry_pass.get())
+        if(a == ""):
+            messagebox.showinfo("MESSAGE","Please Enter ID")
+        elif(b == ""):
+            messagebox.showinfo("MESSAGE","Please Enter Password")
+        else:   
+            mycursor.execute("SELECT login_name from login WHERE login_name='%s'"%(a))
+            x = mycursor.fetchone()
+            n = str(x)
+            m = "('"+a+"',)"
+            if(n!=m):
+                messagebox.showinfo("MESSAGE","ID Doesn't Exist")
+                self.entry_id.delete(0,tk.END)
+                self.entry_pass.delete(0,tk.END)
+            else:
+                mycursor.execute("SELECT password FROM login WHERE login_name= '%s'"%(a))
+                for i in mycursor:
+                    a1=list(i)
+                for i in a1:
+                    c=i
+                if(b!=c):
+                    messagebox.showinfo("MESSAGE","INCORRECT PASSWORD")
+                    self.entry_pass.delete(0,tk.END)
+                else:
+                    self.entry_id.delete(0,tk.END)
+                    self.entry_pass.delete(0,tk.END)
+                    controller.show_frame(Record)
+
+class Register(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label_1 = tk.Label(self, text="Login Details",width=20,font=("Times New Roman", 20))
+        self.label_0 = tk.Label(self, text="Enter the details",width=20,font=("Arial", 15))
+        self.label_id = tk.Label(self, text="Staff ID",width=20,font=("bold", 10))
+        self.entry_id = tk.Entry(self)
+        self.label_pass = tk.Label(self, text="Password",width=20,font=("bold", 10))
+        self.entry_pass = tk.Entry(self,show="*")
+        self.label_conpass = tk.Label(self, text="Confirm Password",width=20,font=("bold", 10))
+        self.entry_conpass = tk.Entry(self,show="*")
+        self.b1= tk.Button(self, text='Submit',width=10,bg='brown',fg='white',command = lambda: self.newlogin(controller) ).place(x=195,y=275)
+        self.b2= tk.Button(self, text='Back',width=10,bg='brown',fg='white', command = lambda: controller.show_frame(LoginMain)).place(x=195,y=315)
+        self.newloginpage()
+
+    def newloginpage(self):
+        
+        self.label_1.place(x=5,y=1)     
+        self.label_0.place(x=100,y=60)        
+        self.label_id.place(x=68,y=160)
+        self.entry_id.place(x=240,y=160)
+        self.label_pass.place(x=68,y=200)
+        self.entry_pass.place(x=240,y=200)
+        self.label_conpass.place(x=68,y=230)
+        self.entry_conpass.place(x=240,y=230)
+
+
+    def newlogin(self,controller):
+        staff_id = str(self.entry_id.get())
+        password = str(self.entry_pass.get())
+        conpass = str(self.entry_conpass.get())
+
+        mycursor.execute("SELECT login_name from login WHERE login_name='%s'"%(staff_id))
+        y = mycursor.fetchone()
+        i = str(y)
+        j = "('"+staff_id+"',)"
+        if(i==j):
+            messagebox.showinfo("WARNING","ID already exists ")
+            self.entry_id.delete(0,tk.END)
+            self.entry_pass.delete(0,tk.END)
+            self.entry_conpass.delete(0,tk.END)
+        else:
+            if(password!=conpass):
+                messagebox.showinfo("WARNING","Password Doesnt Match ")
+                self.entry_pass.delete(0,tk.END)
+                self.entry_conpass.delete(0,tk.END)
+            else:
+                mycursor.execute("insert into login(login_name,password)values('%s','%s')" %(staff_id,password))
+                mydb.commit()
+                messagebox.showinfo("CREATED","New Login Created")
+                self.entry_id.delete(0,tk.END)
+                self.entry_pass.delete(0,tk.END)
+                self.entry_conpass.delete(0,tk.END)
+                controller.show_frame(LoginMain)
+        
+class Record(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.b0= tk.Button(self, text='Log Out',width=10,bg='brown',fg='white',command=lambda: controller.show_frame(LoginMain)).place(x=400,y=20)
+        self.b= tk.Button(self, text='Create New Record',width=20,bg='brown',fg='white',command= lambda: controller.show_frame(Record_Entry)).place(x=180,y=350)
+        self.b1= tk.Button(self, text='Edit Existing Record',width=20,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Edit)).place(x=180,y=400)
+        self.b2= tk.Button(self, text='View Records',width=20,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Display)).place(x=180,y=450)
+    def direction1(self):
+        record_view.main()
+
+class Record_Entry(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label_0 = tk.Label(self, text="ENTER THE PATIENT DETAILS",font=("Times New Roman", 20))
+        self.label_name = tk.Label(self, text="Patient Name  *",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.entry_name = tk.Entry(self)
+        self.label_mobile = tk.Label(self, text="Mobile Number  *",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.entry_mobile = tk.Entry(self)
+        self.label_id = tk.Label(self, text="Patient Id  *",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.entry_id = tk.Entry(self)
+        self.label_add = tk.Label(self, text="Address  *",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.entry_add = tk.Entry(self,width=40)
+        self.label_age = tk.Label(self, text="Age  *",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.entry_age = tk.Entry(self,width=20)
+        self.label_gender = tk.Label(self, text="Gender  *",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.label_date = tk.Label(self, text="Date",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.label_doctor = tk.Label(self, text="Referred by ",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.entry_doctor = tk.Entry(self)
+        self.label_treatment = tk.Label(self, text="Treatment Given",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.entry_treatment = tk.Entry(self,width=40)
+        self.label_remark = tk.Label(self, text="Additional Remarks",width=20,font=("bold", 10),anchor='w',justify='left')
+        self.entry_remark = tk.Entry(self,width=40)
+        self.label_star = tk.Label(self, text="* Compulsory Entries",width=20,font=("bold", 8),anchor='w',foreground='red')
+        self.recordEntry(controller)
+
+    def recordEntry(self,controller):
+        
+        self.label_0.place(x=50,y=2)
+        self.label_name.place(x=50,y=60)
+        self.entry_name.place(x=200,y=60)
+        self.label_mobile.place(x=50,y=100)
+        self.entry_mobile.place(x=251,y=100)
+        self.label_id.place(x=50,y=140)
+        self.entry_id.place(x=200,y=140)
+        self.label_add.place(x=50,y=180)
+        self.entry_add.place(x=200,y=180)
+        self.label_age.place(x=50,y=220)
+        self.entry_age.place(x=200,y=220)
+        self.label_gender.place(x=50,y=260)
+        self.label_doctor.place(x=50,y=340)
+        self.entry_doctor.place(x=200,y=340)
+        self.label_treatment.place(x=50,y=380)
+        self.entry_treatment.place(x=200,y=380)
+        self.label_remark.place(x=50,y=420)
+        self.entry_remark.place(x=200,y=420)
+        self.label_star.place(x=50,y=450)
+
+        mycursor.execute("Select * from patient_record")
+        r = mycursor.fetchall()
+        i = len(r)
+        self.label_id = tk.Label(self, text="(Last Entry is Entry No.%d)"%(i),width=20,font=("bold", 8))
+        self.label_id.place(x=200,y=160)
+
+        self.cb = tk.IntVar()
+        self.Combo = ttk.Combobox(self,textvariable=self.cb,width=5, values = ('+91','022','Other'))
+        #self.Combo.grid()
+        self.Combo['state'] = 'readonly'
+        self.Combo.current(0)
+        self.Combo.place(x=200,y=100)
+               
+        self.cb1 = tk.IntVar()
+        self.Combo1 = ttk.Combobox(self,textvariable=self.cb1,width=10, values = ('Male','Female'))
+        #self.Combo.grid()
+        self.Combo1['state'] = 'readonly'
+        self.Combo1.current(0)
+        self.Combo1.place(x=200,y=260)
+        
+
+        self.label_date.place(x=50,y=300)
+        self.x = datetime.datetime.now().strftime("%d-%m-%Y")
+        self.label_date1 = tk.Label(self, text=self.x,width=20,font=("bold", 10),anchor='w')
+        self.label_date1.place(x=200,y=300)
+               
+        self.b1= tk.Button(self, text='Submit',bg='brown',fg='white',width=15,command=lambda: self.validate(controller)).place(x=170,y=470)
+        self.b2= tk.Button(self, text='Clear',bg='brown',fg='white',width=10,command=self.cleardata).place(x=270,y=470)
+        self.b3= tk.Button(self, text='View Records',bg='brown',fg='white',width=15,command=self.view).place(x=170,y=500)
+        self.b4= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda: controller.show_frame(Record)).place(x=270,y=500)
+
+    def validate(self,controller):
+        if not self.entry_name.get():
+            messagebox.showwarning("WARNING","Enter the Patient's Name")
+        if not self.entry_mobile.get():
+            messagebox.showwarning("WARNING","Enter Mobile Number")
+        if self.entry_mobile.get():
+            if self.entry_mobile.get().isdigit() == False:
+                messagebox.showwarning("WARNING","Enter Only Numerical Values in Mobile Number Field")
+                self.entry_mobile.delete(0,tk.END)
+            else:
+                if self.Combo.get() == "+91":
+                    if len(str(self.entry_mobile.get())) != 10:
+                           messagebox.showerror("ERROR","Incorrect Mobile Number\nEnter Mobile Number Again")
+                           self.entry_mobile.delete(0,tk.END)
+                if self.Combo.get() == "022":
+                    if len(str(self.entry_mobile.get())) != 8:
+                            messagebox.showerror("ERROR","Incorrect Landline Number\nEnter Landline Number Again")
+                            self.entry_mobile.delete(0,tk.END)
+        if not self.entry_id.get():
+            messagebox.showinfo("WARNING","Enter the Patient's ID")
+        else:
+            if self.entry_id.get().isdigit() == False:
+                messagebox.showinfo("WARNING","Enter Only Numerical Values in the ID Field")
+                self.entry_id.delete(0,tk.END)
+            else:
+                q = self.entry_id.get()
+                mycursor.execute("SELECT id_number from patient_record WHERE id_number='%s'"%(q))
+                w = mycursor.fetchone()
+                s = str(w)
+                t = "("+q+",)"
+                if(s==t):
+                    messagebox.showerror("ERROR","ID Already Exists")
+                    self.entry_id.delete(0,tk.END)
+        if not self.entry_add.get():
+            messagebox.showwarning("WARNING","Enter the Patient's Address")
+        if not self.entry_age.get():
+            messagebox.showwarning("WARNING","Enter the Patient's Age")
+        else:
+            if self.entry_age.get().isdigit() == False:
+                messagebox.showerror("ERROR","Enter Only Numerical Values in the Age Field")
+                self.entry_age.delete(0,tk.END)
+        self.entry(controller)
+
+    def entry(self,controller):
+        name = str(self.entry_name.get())
+        mobile = str(self.entry_mobile.get())
+        id_no = str(self.entry_id.get())
+        address = str(self.entry_add.get())
+        age = str(self.entry_age.get())
+        gender = str(self.Combo1.get())
+        date = str(self.x)
+        doctor_name = str(self.entry_doctor.get())
+        if(doctor_name == ""):
+            doctor_name = "NONE"
+        #multiple doctors
+        treatment = str(self.entry_treatment.get())
+        if(treatment == ""):
+            treatment = "NONE"
+        remarks = str(self.entry_remark.get())
+        if(remarks == ""):
+            remarks = "NONE"
+
+        if not ((self.entry_name.get()) and (self.entry_mobile.get()) and (self.entry_id.get()) and (self.entry_add.get()) and (self.entry_age.get()) ):
+            messagebox.showinfo("ERROR","Enter Details first and then click on Submit Button")  
+        else:
+            mycursor.execute("insert into doctor(id_number,doctor_name)values('%s','%s')" %(id_no,doctor_name))
+            mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,doctor_name,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,doctor_name,treatment,remarks))
+            mydb.commit()
+            messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
+
+            mycursor.execute("Select * from patient_record")
+            r = mycursor.fetchall()
+            df = pd.DataFrame(r)
+            df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender","Date","Doctor Name","Treatment Given","Additional Remarks"]
+            df.to_csv('Records.csv')
+            i = len(r)
+            
+            resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
+            if resp == "yes":
+                self.label_id = tk.Label(self, text="(Last Entry is Entry No.%d)"%(i),width=20,font=("bold", 8))
+                self.label_id.place(x=200,y=160)
+                self.cleardata()
+            else:
+                self.cleardata()
+                self.back(controller)
+
+    def cleardata(self):
+        self.entry_name.delete(0,tk.END)
+        self.entry_mobile.delete(0,tk.END)
+        self.entry_id.delete(0,tk.END)
+        self.entry_age.delete(0,tk.END)
+        self.entry_add.delete(0,tk.END)
+        self.entry_doctor.delete(0,tk.END)
+        self.entry_treatment.delete(0,tk.END)
+        self.entry_remark.delete(0,tk.END)
+    def view(self):
+        record_view.main()
+    def back(self,controller):
+        controller.show_frame(Record)
+
+class Record_Edit(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label_0 = tk.Label(self, text="Edit and Delete",width = 20,font=("Times New Roman", 20))
+        self.recordEdit(controller)
+
+    def recordEdit(self,controller):
+        self.label_0.place(x=100,y=5)
+        self.b1= tk.Button(self, text='Edit Record',bg='brown',fg='white',width=15,command=self.edit).place(x=100,y=80)
+        self.b2= tk.Button(self, text='Delete Record',bg='brown',fg='white',width=15,command=self.delete).place(x=200,y=80)
+        self.b3= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda: controller.show_frame(Record)).place(x=200,y=400)
+
+    def edit(self):
+        print(123)
+    def delete(self):
+        print(123)
+
+class Record_Display(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label_0 = tk.Label(self, text="RECORD DISPLAY",width = 20,font=("Times New Roman", 20))
+        self.label_10 = tk.Label(self, text="TO DISPLAY ALL RECORDS IN PARTICULAR ORDER",width = 50,font=("Times New Roman", 10))
+        self.label_20 = tk.Label(self, text="TO DISPLAY SINGLE RECORD",width = 50,font=("Times New Roman", 10))
+        self.label_1 = tk.Label(self, text="Search By",width = 20) 
+        self.entry_search = tk.Entry(self)       
+        self.label_2 = tk.Label(self, text="Sort By",width = 20)
+        self.recordDisplay(controller)
+    
+    def recordDisplay(self,controller):
+        self.label_0.place(x=100,y=5)
+        self.label_10.place(x=50,y=80)
+        self.label_20.place(x=50,y=220)
+        self.label_1.place(x=195,y=250)
+        self.label_2.place(x=200,y=110)
+
+        self.cb = tk.IntVar()
+        self.Combo = ttk.Combobox(self,textvariable=self.cb,width=12, values = ('Patient Name','Mobile','Patient Id','Date','Gender','Doctor Name'))
+        #self.Combo.grid()
+        self.Combo['state'] = 'readonly'
+        self.Combo.current(0)
+        self.Combo.place(x=180,y=270)
+        self.entry_search.place(x=170,y=300)
+
+        self.cb1 = tk.IntVar()
+        self.Combo1 = ttk.Combobox(self,textvariable=self.cb1,width=12, values = ('Patient Name','Patient Id','Gender','Age','Date','Doctor Name'))
+        #self.Combo1.grid()
+        self.Combo1['state'] = 'readonly'
+        self.Combo1.current(0)
+        self.Combo1.place(x=180,y=130)
+
+        
+        self.b1= tk.Button(self, text='Search and Display',bg='brown',fg='white',width=25,command=self.validate).place(x=150,y=330)
+        self.b2= tk.Button(self, text='View Records',bg='brown',fg='white',width=20,command=self.sort).place(x=160,y=160)
+        self.b3= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda:controller.show_frame(Record)).place(x=200,y=400)
+        self.b4= tk.Button(self, text='View All Records',bg='brown',fg='white',width=20,command=self.all).place(x=170,y=45)
+    def validate(self):
+        search = self.Combo.get()
+        if not self.entry_search.get():
+            messagebox.showwarning("WARNING","Enter the Details")
+        if(search == "Patient Name"):
+            y = "patient_name"        
+        elif(search == "Mobile"):
+            y = "mobile"
+        elif(search == "Patient Id"):
+            y = "id_number"
+        elif(search == "Date"):
+            y = "date"  
+        elif(search == "Gender"):
+            y = "gender"
+        elif(search == "Doctor Name"):
+            y = "doctor_name"
+        q = self.entry_search.get()
+        mycursor.execute("SELECT * from patient_record WHERE %s='%s'"%(y,q))
+        fetch = mycursor.fetchall()
+        if not fetch:
+            messagebox.showerror("ERROR","Entry Doesn't Exist")
+            self.entry_search.delete(0,tk.END)
+        else:
+            print(fetch)
+            self.Combo.current(0)
+            self.entry_search.delete(0,tk.END)
+
+    def sort(self):
+        sort = str(self.Combo1.get())
+        if(sort == "Patient Name"):
+            i = "patient_name"
+        if(sort == "Patient Id"):
+            i = "id_number"
+        if(sort == "Gender"):
+            i = "gender"
+        if(sort == "Age"):
+            i = "age"
+        if(sort == "Date"):
+            i = "date"
+        if(sort == "Doctor Name"):
+            i = "doctor_name"
+        mycursor.execute("SELECT * FROM patient_record ORDER BY %s"%(i))
+        fetch1 = mycursor.fetchall()
+        print(fetch1)
+        self.Combo1.current(0)
+    def all(self):
+        record_view.main()
+
+
+'''class Display(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.display(controller)
+    def display(self,controller):
+        mycursor.execute("Select * from patient_record")
+        r = mycursor.fetchall()
+        df = pd.DataFrame(r)
+        df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender","Date","Doctor Name","Treatment Given","Additional Remarks"]
+        df.to_csv('Records.csv')
+        #lst = [df.columns.values.tolist()] + df.values.tolist()
+        
+        tree = ttk.Treeview(self,height = 20, column=("c1", "c2", "c3","c4","c5","c6","c7","c8","c9","c10"), show='headings')
+        style = ttk.Style()
+        style.theme_use("clam")
+        #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
+        #style.map("Treeview",background=[('selected','blue')])
+        tree.column("#1", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#1", text="Patient Name")
+        tree.column("#2", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#2", text="Mobile No")
+        tree.column("#3", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#3", text="Patient ID")
+        tree.column("#4", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#4", text="Address")
+        tree.column("#5", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#5", text="Age")
+        tree.column("#6", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#6", text="Gender")
+        tree.column("#7", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#7", text="Date")
+        tree.column("#8", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#8", text="Doctor Name")
+        tree.column("#9", anchor=tk.CENTER,minwidth=0, width=100, stretch='YES')
+        tree.heading("#9", text="Treatment Given")
+        tree.column("#10", anchor=tk.CENTER,minwidth=0, width=100, stretch='YES')
+        tree.heading("#10", text="Additional Remarks")
+
+        hsb = tk.Scrollbar(self, orient="horizontal", command=tree.xview)
+        hsb.place(x=0, y=428,width=500)
+        tree.configure(xscrollcommand=hsb.set)
+        tree.pack()
+        for x in r:
+            tree.insert("", tk.END, values=x)
+        self.b2= tk.Button(self, text='Quit',width=10,command=lambda: controller.show_frame(Record)).place(x=250,y=460)'''
+    
+# Driver Code
+app = tkinterApp()
+app.geometry('500x550')
+app.resizable(0, 0)
+app.mainloop()

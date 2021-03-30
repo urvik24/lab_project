@@ -3,6 +3,7 @@ import mysql.connector
 from tkinter import messagebox
 import record_entry
 import login_main
+import record_edit
 import record_view
 import record_display
 
@@ -27,19 +28,16 @@ class record():
         self.b0= Button(self.root, text='Log Out',width=10,bg='brown',fg='white',command=self.back).place(x=400,y=20)
         self.b= Button(self.root, text='Create New Record',width=20,bg='brown',fg='white',command=self.direction).place(x=180,y=350)
         self.b1= Button(self.root, text='Edit Existing Record',width=20,bg='brown',fg='white',command=self.direction1).place(x=180,y=400)
-        self.b2= Button(self.root, text='View All Records',width=20,bg='brown',fg='white',command=self.direction2).place(x=180,y=450)
+        self.b2= Button(self.root, text='View Records',width=20,bg='brown',fg='white',command=self.direction2).place(x=180,y=450)
         self.root.mainloop()
     def back(self):
         login_main.main()
     def direction(self):
         record_entry.main()
     def direction1(self):
-        record_display.main()
+        record_edit.main()
     def direction2(self):
-        record_view.main()
-#doctors
-#print krne ka hai
-#style
+        record_display.main()
 
 #main()
         

@@ -80,12 +80,6 @@ class loginmain():
     def back(self):
         login.main()
         
-    
-            
-    #def login1(self):
-    #    self.newwindow=Toplevel(self.root)
-    #    self.app=newlogin(self.newwindow)
-        #self.root.destroy()        
 #main()
 
 

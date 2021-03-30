@@ -5,7 +5,6 @@ import mysql.connector
 from pymysql import*
 import xlwt
 import datetime
-from datetime import timedelta
 import pandas.io.sql as sql
 import pandas as pd
 import record_main
@@ -26,8 +25,6 @@ def main():
 
 class record_entry():
     def __init__(self,root):
-        
-
         self.root = root
         self.root.geometry('500x550')
         self.root.title("Record entry")
@@ -134,15 +131,7 @@ class record_entry():
         address = str(self.entry_add.get())
         age = str(self.entry_age.get())
         gender = str(self.Combo1.get())
-
-        '''if(gend == 2):
-            print("FEMALE")
-            gender = "FEMALE"
-        elif(gend == 1):
-            print("MALE")
-            gender = "MALE"'''
         date = str(self.x)
-        print(date)
         doctor_name = str(self.entry_doctor.get())
         if(doctor_name == ""):
             doctor_name = "NONE"
@@ -157,9 +146,9 @@ class record_entry():
         if not ((self.entry_name.get()) and (self.entry_mobile.get()) and (self.entry_id.get()) and (self.entry_add.get()) and (self.entry_age.get()) ):
             messagebox.showinfo("ERROR","Enter Details first and then click on Submit Button")  
         else:
-            #mycursor.execute("insert into doctor(id_number,doctor_name)values('%s','%s')" %(id_no,doctor_name))
-            #mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,doctor_name,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,doctor_name,treatment,remarks))
-            #mydb.commit()
+            mycursor.execute("insert into doctor(id_number,doctor_name)values('%s','%s')" %(id_no,doctor_name))
+            mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,doctor_name,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,doctor_name,treatment,remarks))
+            mydb.commit()
             messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
             resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
             if resp == "yes":
@@ -222,11 +211,8 @@ class record_entry():
         self.entry_treatment.delete(0,END)
         self.entry_remark.delete(0,END)
         self.radio.set(1)
-        #self.x = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-        #print(self.x)
 
     def back(self):
-        self.root.deiconify()
         record_main.main()
         
     def view(self):

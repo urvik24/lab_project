@@ -35,12 +35,12 @@ class record_entry():
         self.label_0 = Label(self.root, text="ENTER THE PATIENT DETAILS",font=("Times New Roman", 20))
         self.label_0.place(x=50,y=2)
 
-        self.label_name = Label(self.root, text="Patient Name",width=20,font=("bold", 10))
+        self.label_name = Label(self.root, text="Patient Name  *",width=20,font=("bold", 10))
         self.label_name.place(x=50,y=60)
         self.entry_name = Entry(self.root)
         self.entry_name.place(x=200,y=60)
 
-        self.label_mobile = Label(self.root, text="Mobile Number",width=20,font=("bold", 10))
+        self.label_mobile = Label(self.root, text="Mobile Number  *",width=20,font=("bold", 10))
         self.label_mobile.place(x=50,y=100)
 
         self.cb = IntVar()
@@ -52,27 +52,28 @@ class record_entry():
         self.entry_mobile = Entry(self.root)
         self.entry_mobile.place(x=250,y=100)
 
-        self.label_id = Label(self.root, text="Patient Id",width=20,font=("bold", 10))
+        self.label_id = Label(self.root, text="Patient Id  *",width=20,font=("bold", 10))
         self.label_id.place(x=50,y=140)
         self.entry_id = Entry(self.root)
         self.entry_id.place(x=200,y=140)
-        #n = mycursor.execute("Select * from patient_records")
-        #print(n)
-        i = 10
-        self.label_id = Label(self.root, text="(Last entered ID is %d)"%(i),width=20,font=("bold", 8))
+        mycursor.execute("Select * from patient_record")
+        yo = mycursor.fetchall()
+        print(type(yo))
+        i = len(yo)
+        self.label_id = Label(self.root, text="(Last entered Entry is No.%d)"%(i),width=20,font=("bold", 8))
         self.label_id.place(x=200,y=162)
 
-        self.label_add = Label(self.root, text="Address",width=20,font=("bold", 10))
+        self.label_add = Label(self.root, text="Address  *",width=20,font=("bold", 10))
         self.label_add.place(x=50,y=180)
         self.entry_add = Entry(self.root,width=40)
         self.entry_add.place(x=200,y=180)
 
-        self.label_age = Label(self.root, text="Age",width=20,font=("bold", 10))
+        self.label_age = Label(self.root, text="Age  *",width=20,font=("bold", 10))
         self.label_age.place(x=50,y=220)
         self.entry_age = Entry(self.root,width=20)
         self.entry_age.place(x=200,y=220)
         
-        self.label_gender = Label(self.root, text="Gender",width=20,font=("bold", 10))
+        self.label_gender = Label(self.root, text="Gender  *",width=20,font=("bold", 10))
         self.label_gender.place(x=50,y=260)
         self.radio = IntVar()
         self.radio.set(1)
@@ -119,8 +120,11 @@ class record_entry():
         self.entry_remark = Entry(self.root,width=40)
         self.entry_remark.place(x=200,y=420)
 
-        self.b1= Button(self.root, text='Submit',width=15,command=self.validate).place(x=170,y=460)
-        self.b2= Button(self.root, text='Clear',width=10,command=self.cleardata).place(x=270,y=460)
+        self.label_star = Label(self.root, text="* Compulsory Entries",width=20,font=("bold", 8),foreground='red')
+        self.label_star.place(x=50,y=450)
+
+        self.b1= Button(self.root, text='Submit',width=15,command=self.validate).place(x=170,y=470)
+        self.b2= Button(self.root, text='Clear',width=10,command=self.cleardata).place(x=270,y=470)
         self.b3= Button(self.root, text='View Records',width=15,command=self.view).place(x=170,y=500)
         self.b4= Button(self.root, text='Back',width=10,command=self.back).place(x=270,y=500)
    
@@ -150,12 +154,12 @@ class record_entry():
             mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,doctor_name,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,doctor_name,treatment,remarks))
             mydb.commit()
             messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
-            resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
-            if resp == "yes":
-                self.cleardata()
-            else:
-                self.cleardata()
-                self.back()
+            #resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
+            #if resp == "yes":
+            #    self.cleardata()
+            #else:
+            self.cleardata()
+            self.back()
 
     def validate(self):
         if not self.entry_name.get():

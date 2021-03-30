@@ -1,18 +1,19 @@
-import mysql.connector
+# import mysql.connector
+
 from pymysql import*
 # import xlwt
 # import pandas.io.sql as sql
-import pandas as pd
+# import pandas as pd
 from tkinter import *
-from pandastable import Table, TableModel
+# from pandastable import Table, TableModel
 
-mydb=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="urvik9293",
-    database="lab",
-)
-mycursor=mydb.cursor()
+# mydb=mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     password="urvik9293",
+#     database="lab",
+# )
+# mycursor=mydb.cursor()
 
 class main(Frame):
     def __init__(self, parent=None):

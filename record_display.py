@@ -1,21 +1,21 @@
-import mysql.connector
+# import mysql.connector
 from pymysql import*
 
-import pandas.io.sql as sql
-import pandas as pd
+# import pandas.io.sql as sql
+# import pandas as pd
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
-from pandastable import Table, TableModel
+# from pandastable import Table, TableModel
 import record_main
 
-mydb=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="urvik9293",
-    database="lab",
-)
-mycursor=mydb.cursor()
+# mydb=mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     password="urvik9293",
+#     database="lab",
+# )
+# mycursor=mydb.cursor()
 
 def main():
     root=Tk()

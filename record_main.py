@@ -1,18 +1,17 @@
 from tkinter import *
-import mysql.connector
+# import mysql.connector
 from tkinter import messagebox
 import record_entry
-import login_main
 import record_view
 import record_display
 
-mydb=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="urvik9293",
-    database="lab",
-)
-mycursor=mydb.cursor()
+# mydb=mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     password="urvik9293",
+#     database="lab",
+# )
+# mycursor=mydb.cursor()
 def main():
     root=Tk()
     app=record(root)

@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
-import mysql.connector
+# import mysql.connector
 from pymysql import*
 # import xlwt
 import datetime
@@ -11,13 +11,13 @@ from datetime import timedelta
 import record_main
 import record_view
 
-mydb=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="urvik9293",
-    database="lab",
-)
-mycursor=mydb.cursor()
+# mydb=mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     password="urvik9293",
+#     database="lab",
+# )
+# mycursor=mydb.cursor()
 
 def main():
     root=Tk()

@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import messagebox
-import login_main
 import record_view
 
 def main():

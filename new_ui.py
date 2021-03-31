@@ -402,11 +402,11 @@ class Record_Display(tk.Frame):
         self.Combo1.place(x=180,y=130)
 
         
-        self.b1= tk.Button(self, text='Search and Display',bg='brown',fg='white',width=25,command=self.validate).place(x=150,y=330)
-        self.b2= tk.Button(self, text='View Records',bg='brown',fg='white',width=20,command=self.sort).place(x=160,y=160)
+        self.b1= tk.Button(self, text='Search and Display',bg='brown',fg='white',width=25,command=lambda: self.validate(controller)).place(x=150,y=330)
+        self.b2= tk.Button(self, text='View Records',bg='brown',fg='white',width=20,command=lambda: self.sort(controller)).place(x=160,y=160)
         self.b3= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda:controller.show_frame(Record)).place(x=200,y=400)
         self.b4= tk.Button(self, text='View All Records',bg='brown',fg='white',width=20,command=self.all).place(x=170,y=45)
-    def validate(self):
+    def validate(self,controller):
         search = self.Combo.get()
         if not self.entry_search.get():
             messagebox.showwarning("WARNING","Enter the Details")
@@ -424,16 +424,15 @@ class Record_Display(tk.Frame):
             y = "doctor_name"
         q = self.entry_search.get()
         mycursor.execute("SELECT * from patient_record WHERE %s='%s'"%(y,q))
-        fetch = mycursor.fetchall()
-        if not fetch:
+        self.fetch = mycursor.fetchall()
+        if not self.fetch:
             messagebox.showerror("ERROR","Entry Doesn't Exist")
             self.entry_search.delete(0,tk.END)
         else:
-            print(fetch)
             self.Combo.current(0)
             self.entry_search.delete(0,tk.END)
-
-    def sort(self):
+            self.searchDisplay(controller)
+    def sort(self,controller):
         sort = str(self.Combo1.get())
         if(sort == "Patient Name"):
             i = "patient_name"
@@ -448,25 +447,12 @@ class Record_Display(tk.Frame):
         if(sort == "Doctor Name"):
             i = "doctor_name"
         mycursor.execute("SELECT * FROM patient_record ORDER BY %s"%(i))
-        fetch1 = mycursor.fetchall()
-        print(fetch1)
+        self.fetch1 = mycursor.fetchall()
         self.Combo1.current(0)
+        self.sortDisplay(controller)     
     def all(self):
         record_view.main()
-
-
-'''class Display(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        self.display(controller)
-    def display(self,controller):
-        mycursor.execute("Select * from patient_record")
-        r = mycursor.fetchall()
-        df = pd.DataFrame(r)
-        df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender","Date","Doctor Name","Treatment Given","Additional Remarks"]
-        df.to_csv('Records.csv')
-        #lst = [df.columns.values.tolist()] + df.values.tolist()
-        
+    def searchDisplay(self,controller):      
         tree = ttk.Treeview(self,height = 20, column=("c1", "c2", "c3","c4","c5","c6","c7","c8","c9","c10"), show='headings')
         style = ttk.Style()
         style.theme_use("clam")
@@ -497,10 +483,45 @@ class Record_Display(tk.Frame):
         hsb.place(x=0, y=428,width=500)
         tree.configure(xscrollcommand=hsb.set)
         tree.pack()
+        self.b2= tk.Button(self, text='Quit',width=10,command=lambda: controller.show_frame(Record)).place(x=200,y=480)
+        r = self.fetch
         for x in r:
             tree.insert("", tk.END, values=x)
-        self.b2= tk.Button(self, text='Quit',width=10,command=lambda: controller.show_frame(Record)).place(x=250,y=460)'''
-    
+    def sortDisplay(self,controller):
+        tree = ttk.Treeview(self,height = 22, column=("c1", "c2", "c3","c4","c5","c6","c7","c8","c9","c10"), show='headings')
+        style = ttk.Style()
+        style.theme_use("clam")
+        #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
+        #style.map("Treeview",background=[('selected','blue')])
+        tree.column("#1", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#1", text="Patient Name")
+        tree.column("#2", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#2", text="Mobile No")
+        tree.column("#3", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#3", text="Patient ID")
+        tree.column("#4", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#4", text="Address")
+        tree.column("#5", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#5", text="Age")
+        tree.column("#6", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#6", text="Gender")
+        tree.column("#7", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#7", text="Date")
+        tree.column("#8", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
+        tree.heading("#8", text="Doctor Name")
+        tree.column("#9", anchor=tk.CENTER,minwidth=0, width=100, stretch='YES')
+        tree.heading("#9", text="Treatment Given")
+        tree.column("#10", anchor=tk.CENTER,minwidth=0, width=100, stretch='YES')
+        tree.heading("#10", text="Additional Remarks")
+        hsb = tk.Scrollbar(self, orient="horizontal", command=tree.xview)
+        hsb.place(x=0, y=468,width=500)
+        tree.configure(xscrollcommand=hsb.set)
+        tree.pack()
+        self.b2= tk.Button(self, text='Quit',width=10,command=lambda: controller.show_frame(Record)).place(x=200,y=500)   
+        r = self.fetch1
+        for x in r:
+            tree.insert("", tk.END, values=x)
+         
 # Driver Code
 app = tkinterApp()
 app.geometry('500x550')

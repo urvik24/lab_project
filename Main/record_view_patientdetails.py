@@ -47,24 +47,4 @@ class Display():
         self.b2= Button(self.root, text='Quit',width=10,command=self.root.destroy).place(x=500,y=460)
 #main()
 
-'''class main(Frame):
-    def __init__(self, parent=None):
-        self.parent = parent
-        Frame.__init__(self)
-        self.main = self.master
-        self.main.geometry('600x400')
-        self.main.title('Display')
-        self.f = Frame(self.main)
-        self.f.pack(fill=BOTH,expand=1)
-        self.disp()
-    def disp(self):
-        mycursor.execute("Select * from patient_record")
-        r = mycursor.fetchall()
-        df = pd.DataFrame(r)
-        df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender","Date","Doctor Name","Treatment Given","Additional Remarks"]
-        lst = [df.columns.values.tolist()] + df.values.tolist()
-        df.to_csv('Records.csv')
-        self.table = pt = Table(self.f, dataframe=df,showstatusbar=True)
-        pt.show()'''
-
 

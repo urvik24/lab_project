@@ -2,20 +2,15 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import datetime
-import mysql.connector
 import pandas as pd
 import datetime
+import transaction
 import record_view_patientdetails
 import record_view_medicalrecord
+import record_view_selected
+from mysql_connector import get_connection
 
 LARGEFONT = ("Verdana", 35)
-mydb=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="urvik9293",
-    database="lab",
-)
-mycursor=mydb.cursor()
 
 class tkinterApp(tk.Tk):
 
@@ -77,7 +72,10 @@ class LoginMain(tk.Frame):
             messagebox.showinfo("MESSAGE","Please Enter ID")
         elif(b == ""):
             messagebox.showinfo("MESSAGE","Please Enter Password")
-        else:   
+        else:
+            
+            mydb = get_connection()
+            mycursor = mydb.cursor() 
             mycursor.execute("SELECT login_name from login WHERE login_name='%s'"%(a))
             x = mycursor.fetchone()
             n = str(x)
@@ -99,6 +97,8 @@ class LoginMain(tk.Frame):
                     self.entry_id.delete(0,tk.END)
                     self.entry_pass.delete(0,tk.END)
                     controller.show_frame(Record)
+            
+            mydb.close()
 
 class Register(tk.Frame):
 
@@ -133,6 +133,8 @@ class Register(tk.Frame):
         password = str(self.entry_pass.get())
         conpass = str(self.entry_conpass.get())
 
+        mydb = get_connection()
+        mycursor = mydb.cursor() 
         mycursor.execute("SELECT login_name from login WHERE login_name='%s'"%(staff_id))
         y = mycursor.fetchone()
         i = str(y)
@@ -155,7 +157,7 @@ class Register(tk.Frame):
                 self.entry_pass.delete(0,tk.END)
                 self.entry_conpass.delete(0,tk.END)
                 controller.show_frame(LoginMain)
-        
+        mydb.close()
 class Record(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -264,8 +266,11 @@ class Record_Entry(tk.Frame):
                 self.entry_id.delete(0,tk.END)
             else:
                 q = self.entry_id.get()
+                mydb = get_connection()
+                mycursor = mydb.cursor() 
                 mycursor.execute("SELECT id_number from patient_record WHERE id_number='%s'"%(q))
                 w = mycursor.fetchone()
+                mydb.close()
                 s = str(w)
                 t = "("+q+",)"
                 if(s==t):
@@ -279,6 +284,7 @@ class Record_Entry(tk.Frame):
             if self.entry_age.get().isdigit() == False:
                 messagebox.showwarning("WARNING","Enter Only Numerical Values in the Age Field")
                 self.entry_age.delete(0,tk.END)
+        
         self.entry(controller)
 
     def entry(self,controller):
@@ -303,9 +309,14 @@ class Record_Entry(tk.Frame):
         if not ((self.entry_name.get()) and (self.entry_mobile.get()) and (self.entry_id.get()) and (self.entry_add.get()) and (self.entry_age.get()) ):
             messagebox.showinfo("ERROR","Enter Details first and then click on Submit Button")  
         else:
+
+            mydb = get_connection()
+            mycursor = mydb.cursor()
             mycursor.execute("insert into doctor(id_number,doctor_name,date,treatment_given,additional_remark)values('%s','%s','%s','%s','%s')" %(id_no,doctor_name,date,treatment,remarks))
             mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender)values('%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender))
             mydb.commit()
+            mydb.close()
+            #transation.commit()
             messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
             Excel.excel()
             Excel.excel1()
@@ -381,8 +392,11 @@ class Record_Update(tk.Frame):
         if not self.entry_2.get():
             messagebox.showwarning("WARNING","Enter the Patient's ID")
         else:
+            mydb = get_connection()
+            mycursor = mydb.cursor() 
             mycursor.execute("SELECT patient_name,id_number from patient_record WHERE id_number='%s'"%(y))
             u = mycursor.fetchone()
+            mydb.close()
             if not u:
                 messagebox.showwarning("WARNING","Patient Name and ID do not match")
                 self.entry_1.delete(0,tk.END)
@@ -420,8 +434,11 @@ class Record_Update(tk.Frame):
         if not (self.entry_3.get()):
             messagebox.showinfo("ERROR","Enter Details first and then click on Submit Button")  
         else:
+            mydb = get_connection()
+            mycursor = mydb.cursor() 
             mycursor.execute("UPDATE patient_record SET %s = '%s' WHERE id_number = '%s'" %(a,b,c))
             mydb.commit()
+            mydb.close()
             messagebox.showinfo("MESSAGE","Record Updated Successfully!!")
             Excel.excel()
             Excel.excel1()
@@ -483,6 +500,8 @@ class Record_Add(tk.Frame):
         if not self.entry_2.get():
             messagebox.showwarning("WARNING","Enter the Patient's ID")
         else:
+            mydb = get_connection()
+            mycursor = mydb.cursor() 
             mycursor.execute("SELECT patient_name,id_number from patient_record WHERE id_number='%s'"%(y))
             u = mycursor.fetchone()
             if not u:
@@ -517,6 +536,7 @@ class Record_Add(tk.Frame):
                     Excel.excel()
                     Excel.excel1()
                     self.cleardata()
+                mydb.close()
     def cleardata(self):
         self.entry_1.delete(0,tk.END)
         self.entry_2.delete(0,tk.END)
@@ -556,6 +576,8 @@ class Record_Delete(tk.Frame):
         if not self.entry_2.get():
             messagebox.showwarning("WARNING","Enter the Patient's ID")
         else:
+            mydb = get_connection()
+            mycursor = mydb.cursor() 
             mycursor.execute("SELECT patient_name,id_number from patient_record WHERE id_number='%s'"%(y))
             u = mycursor.fetchone()
             if not u:
@@ -581,6 +603,7 @@ class Record_Delete(tk.Frame):
                         self.cleardel()
                     else:
                         pass
+            mydb.close()
     def cleardel(self):
         self.entry_1.delete(0,tk.END)
         self.entry_2.delete(0,tk.END)
@@ -608,7 +631,7 @@ class Record_Display(tk.Frame):
         self.entry_search.place(x=170,y=300)
 
         self.cb = tk.IntVar()
-        self.Combo = ttk.Combobox(self,textvariable=self.cb,width=12, values = ('Patient Name','Mobile','Patient Id','Date','Gender','Doctor Name'))
+        self.Combo = ttk.Combobox(self,textvariable=self.cb,width=12, values = ('Patient Name','Mobile','Patient Id','Date','Doctor Name'))
         #self.Combo.grid()
         self.Combo['state'] = 'readonly'
         self.Combo.current(0)
@@ -630,13 +653,20 @@ class Record_Display(tk.Frame):
             y = "id_number"
         elif(search == "Date"):
             y = "date"  
-        elif(search == "Gender"):
-            y = "gender"
         elif(search == "Doctor Name"):
             y = "doctor_name"
         q = self.entry_search.get()
-        mycursor.execute("SELECT * from patient_record WHERE %s='%s'"%(y,q))
+        mydb = get_connection()
+        mycursor = mydb.cursor() 
+        mycursor.execute("""SELECT patient_name,doctor.id_number,date,doctor_name,treatment_given,additional_remark FROM patient_record JOIN doctor ON patient_record.id_number = doctor.id_number WHERE %s = '%s' ORDER BY doctor.id_number """%(y,q))
+        '''if (y=="patient_name" or y=="mobile" or y=="patient_id"):
+            mycursor.execute("SELECT * from patient_record WHERE %s='%s'"%(y,q))
+        else:
+                mycursor.execute("SELECT patient_name,doctor.id_number,date,doctor_name,treatment_given,additional_remark FROM patient_record JOIN doctor ON patient_record.id_number = doctor.id_number ORDER BY doctor.id_number WHERE %s ='%s'"%(y,q))
+        '''
         self.fetch = mycursor.fetchall()
+        mydb = get_connection()
+        mycursor = mydb.cursor() 
         if not self.fetch:
             messagebox.showerror("ERROR","Entry Doesn't Exist")
             self.entry_search.delete(0,tk.END)
@@ -648,8 +678,9 @@ class Record_Display(tk.Frame):
         record_view_patientdetails.main()
     def all1(self):
         record_view_medicalrecord.main()
-    def searchDisplay(self,controller):      
-        tree = ttk.Treeview(self,height = 20, column=("c1", "c2", "c3","c4","c5","c6","c7","c8","c9","c10"), show='headings')
+    def searchDisplay(self,controller):
+        record_view_selected.main(self.fetch)     
+        '''tree = ttk.Treeview(self,height = 20, column=("c1", "c2", "c3","c4","c5","c6"), show='headings')
         style = ttk.Style()
         style.theme_use("clam")
         #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
@@ -674,19 +705,25 @@ class Record_Display(tk.Frame):
         self.b2= tk.Button(self, text='Quit',width=10,command=lambda: controller.show_frame(Record)).place(x=200,y=480)
         r = self.fetch
         for x in r:
-            tree.insert("", tk.END, values=x)
+            tree.insert("", tk.END, values=x)'''
 
 class Excel():
     def excel():
+        mydb = get_connection()
+        mycursor = mydb.cursor() 
         mycursor.execute("""SELECT patient_name,doctor.id_number,date,doctor_name,treatment_given,additional_remark FROM patient_record JOIN doctor ON patient_record.id_number = doctor.id_number ORDER BY doctor.id_number""")
         result = mycursor.fetchall()
+        mydb.close()
         df = pd.DataFrame(result)
         df.columns = ["Patient Name","Patient Id","Date","Doctor Name","Treatment Given","Additional Remarks"]
         df.index = df.index + 1
         df.to_csv('Records.csv') 
     def excel1():
+        mydb = get_connection()
+        mycursor = mydb.cursor() 
         mycursor.execute( "select * from patient_record" )
         result1 = mycursor.fetchall()
+        mydb.close()
         df1 = pd.DataFrame(result1)
         df1.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender"]
         df1.index = df1.index + 1
@@ -694,5 +731,5 @@ class Excel():
 # Driver Code
 app = tkinterApp()
 app.geometry('500x550')
-app.resizable(0, 0)
+#app.resizable(0, 0)
 app.mainloop()

@@ -12,28 +12,28 @@ mydb=mysql.connector.connect(
     database="lab",
 )
 mycursor=mydb.cursor()
-def main():
+def main(fetched_list):
     root=Tk()
-    app=Display(root)
+    app=Display(root,fetched_list)
 class Display():
-    def __init__(self,root):
+    def __init__(self,root,fetched_list):
         self.root = root
         self.root.geometry('800x500')
         self.root.maxsize(1100,500)
         self.root.title("Medical Record Display")
         self.style = Style()
         self.style.theme_use("clam")
-        self.display()
-    def display(self):
-        x = "age"
-        i = "22"
+        self.display(fetched_list)
+    def display(self,fetched_list):
+        #x = "age"
+        '''i = "22"
         mycursor.execute("""SELECT patient_name,doctor.id_number,date,doctor_name,treatment_given,  additional_remark FROM patient_record JOIN doctor ON patient_record.id_number = doctor.id_number WHERE %s = '%s' ORDER BY doctor.id_number """%(x,i))
         result = mycursor.fetchall()
         df = pd.DataFrame(result)
         df.columns = ["Patient Name","Patient Id","Date","Doctor Name","Treatment Given","Additional Remarks"]
         df.index = df.index + 1
         #df.to_csv('Patient Details.csv')
-        #lst = [df.columns.values.tolist()] + df.values.tolist()
+        #lst = [df.columns.values.tolist()] + df.values.tolist()'''
         
         tree = Treeview(self.root,height = 20, column=("c1", "c2", "c3","c4","c5","c6"), show='headings')
         #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
@@ -55,7 +55,7 @@ class Display():
         hsb.place(x=150, y=428,width=500)
         tree.configure(xscrollcommand=hsb.set)
         tree.pack()
-        for x in result:
+        for x in fetched_list:
             tree.insert("", END, values=x)
         self.b2= Button(self.root, text='Quit',width=10,command=self.root.destroy).place(x=350,y=460)
 #main()

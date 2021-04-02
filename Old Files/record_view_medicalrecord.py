@@ -4,14 +4,7 @@ import sqlite3
 from tkinter import *
 from tkinter.ttk import *
 from pandastable import Table, TableModel
-
-mydb=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="urvik9293",
-    database="lab",
-)
-mycursor=mydb.cursor()
+from mysql_connector import get_connection
 def main():
     root=Tk()
     app=Display(root)
@@ -25,14 +18,12 @@ class Display():
         self.style.theme_use("clam")
         self.display()
     def display(self):
+        mydb = get_connection()
+        mycursor = mydb.cursor() 
         mycursor.execute("""SELECT patient_name,doctor.id_number,date,doctor_name,treatment_given,additional_remark FROM patient_record JOIN doctor ON patient_record.id_number = doctor.id_number ORDER BY doctor.id_number""")
         result = mycursor.fetchall()
-        df = pd.DataFrame(result)
-        df.columns = ["Patient Name","Patient Id","Date","Doctor Name","Treatment Given","Additional Remarks"]
-        df.index = df.index + 1
-        df.to_csv('Records.csv')
-        #lst = [df.columns.values.tolist()] + df.values.tolist()
-        
+        mydb.close()
+                
         tree = Treeview(self.root,height = 20, column=("c1", "c2", "c3","c4","c5","c6"), show='headings')
         #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
         #style.map("Treeview",background=[('selected','blue')])

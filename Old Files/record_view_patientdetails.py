@@ -4,14 +4,8 @@ import sqlite3
 from tkinter import *
 from tkinter.ttk import *
 from pandastable import Table, TableModel
+from mysql_connector import get_connection
 
-mydb=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="urvik9293",
-    database="lab",
-)
-mycursor=mydb.cursor()
 def main():
     root=Tk()
     app=Display(root)
@@ -25,9 +19,13 @@ class Display():
         self.style.theme_use("clam")
         self.display()
     def display(self):
+        mydb = get_connection()
+        mycursor = mydb.cursor() 
         mycursor.execute( "select * from patient_record" )
         result = mycursor.fetchall()
+        mydb.close()
         df = pd.DataFrame(result)
+        print(result)
         df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender"]
         df.index = df.index + 1
         df.to_csv('Patient Details.csv')

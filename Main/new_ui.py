@@ -12,13 +12,9 @@ from mysql_connector import get_connection
 LARGEFONT = ("Verdana", 35)
 
 class tkinterApp(tk.Tk):
-
-    # __init__ function for class tkinterApp
     def __init__(self, *args, **kwargs):
-        # __init__ function for class Tk
         tk.Tk.__init__(self, *args, **kwargs)
 
-        # creating a container
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         frameList = [LoginMain, Register,Record, Record_Entry, Record_Edit, Record_Update, Record_Add,Record_Delete, Record_Display]
@@ -297,7 +293,6 @@ class Record_Entry(tk.Frame):
         doctor_name = str(self.entry_doctor.get())
         if(doctor_name == ""):
             doctor_name = "NONE"
-        #multiple doctors
         treatment = str(self.entry_treatment.get())
         if(treatment == ""):
             treatment = "NONE"
@@ -315,7 +310,6 @@ class Record_Entry(tk.Frame):
             mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender)values('%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender))
             mydb.commit()
             mydb.close()
-            #transation.commit()
             messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
             Excel.excel()
             Excel.excel1()
@@ -636,7 +630,6 @@ class Record_Display(tk.Frame):
         self.Combo.current(0)
         self.Combo.place(x=180,y=270)
         
-
         self.b2= tk.Button(self, text='Search and Display',bg='brown',fg='white',width=25,command=lambda: self.validate(controller)).place(x=150,y=330)
         self.b3= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda:controller.show_frame(Record)).place(x=200,y=400)
         
@@ -658,11 +651,6 @@ class Record_Display(tk.Frame):
         mydb = get_connection()
         mycursor = mydb.cursor() 
         mycursor.execute("""SELECT patient_name,doctor.id_number,date,doctor_name,treatment_given,additional_remark FROM patient_record JOIN doctor ON patient_record.id_number = doctor.id_number WHERE %s = '%s' ORDER BY doctor.id_number """%(y,q))
-        '''if (y=="patient_name" or y=="mobile" or y=="patient_id"):
-            mycursor.execute("SELECT * from patient_record WHERE %s='%s'"%(y,q))
-        else:
-                mycursor.execute("SELECT patient_name,doctor.id_number,date,doctor_name,treatment_given,additional_remark FROM patient_record JOIN doctor ON patient_record.id_number = doctor.id_number ORDER BY doctor.id_number WHERE %s ='%s'"%(y,q))
-        '''
         self.fetch = mycursor.fetchall()
         mydb = get_connection()
         mycursor = mydb.cursor() 
@@ -679,32 +667,6 @@ class Record_Display(tk.Frame):
         record_view_medicalrecord.main()
     def searchDisplay(self,controller):
         record_view_selected.main(self.fetch)     
-        '''tree = ttk.Treeview(self,height = 20, column=("c1", "c2", "c3","c4","c5","c6"), show='headings')
-        style = ttk.Style()
-        style.theme_use("clam")
-        #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
-        #style.map("Treeview",background=[('selected','blue')])
-        tree.column("#1", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
-        tree.heading("#1", text="Patient Name")
-        tree.column("#2", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
-        tree.heading("#2", text="Mobile No")
-        tree.column("#3", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
-        tree.heading("#3", text="Patient ID")
-        tree.column("#4", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
-        tree.heading("#4", text="Address")
-        tree.column("#5", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
-        tree.heading("#5", text="Age")
-        tree.column("#6", anchor=tk.CENTER,minwidth=0, width=100, stretch='NO')
-        tree.heading("#6", text="Gender")
-
-        hsb = tk.Scrollbar(self, orient="horizontal", command=tree.xview)
-        hsb.place(x=0, y=428,width=500)
-        tree.configure(xscrollcommand=hsb.set)
-        tree.pack()
-        self.b2= tk.Button(self, text='Quit',width=10,command=lambda: controller.show_frame(Record)).place(x=200,y=480)
-        r = self.fetch
-        for x in r:
-            tree.insert("", tk.END, values=x)'''
 
 class Excel():
     def excel():
@@ -727,7 +689,7 @@ class Excel():
         df1.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender"]
         df1.index = df1.index + 1
         df1.to_csv('Patient Details.csv')   
-# Driver Code
+
 app = tkinterApp()
 app.geometry('500x550')
 #app.resizable(0, 0)

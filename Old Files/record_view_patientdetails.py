@@ -1,9 +1,5 @@
-import mysql.connector
-import pandas as pd
-import sqlite3
 from tkinter import *
 from tkinter.ttk import *
-from pandastable import Table, TableModel
 from mysql_connector import get_connection
 
 def main():
@@ -25,11 +21,6 @@ class Display():
         result = mycursor.fetchall()
         mydb.close()
         df = pd.DataFrame(result)
-        print(result)
-        df.columns = ["Patient Name","Mobile","Patient Id","Address","Age","Gender"]
-        df.index = df.index + 1
-        df.to_csv('Patient Details.csv')
-        #lst = [df.columns.values.tolist()] + df.values.tolist()
         
         tree = Treeview(self.root,height = 20, column=("c1", "c2", "c3","c4","c5","c6"), show='headings')
         #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")

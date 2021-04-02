@@ -1,17 +1,7 @@
-import mysql.connector
-import pandas as pd
-import sqlite3
 from tkinter import *
 from tkinter.ttk import *
-from pandastable import Table, TableModel
+from mysql_connector import get_connection
 
-mydb=mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="urvik9293",
-    database="lab",
-)
-mycursor=mydb.cursor()
 def main():
     root=Tk()
     app=Display(root)
@@ -20,18 +10,17 @@ class Display():
         self.root = root
         self.root.geometry('800x500')
         self.root.maxsize(1100,500)
-        self.root.title("Medical Record Display")
+        self.root.title("Table Display")
         self.style = Style()
         self.style.theme_use("clam")
         self.display()
     def display(self):
-        mycursor.execute("""SELECT patient_name,doctor.id_number,date,doctor_name,treatment_given,additional_remark FROM patient_record JOIN doctor ON patient_record.id_number = doctor.id_number ORDER BY doctor.id_number""")
+        mydb = get_connection()
+        mycursor = mydb.cursor() 
+        mycursor.execute( "select * from patient_record" )
         result = mycursor.fetchall()
+        mydb.close()
         df = pd.DataFrame(result)
-        df.columns = ["Patient Name","Patient Id","Date","Doctor Name","Treatment Given","Additional Remarks"]
-        df.index = df.index + 1
-        df.to_csv('Patient Details.csv')
-        #lst = [df.columns.values.tolist()] + df.values.tolist()
         
         tree = Treeview(self.root,height = 20, column=("c1", "c2", "c3","c4","c5","c6"), show='headings')
         #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
@@ -39,15 +28,15 @@ class Display():
         tree.column("#1", anchor=CENTER,minwidth=0, width=100, stretch=NO)
         tree.heading("#1", text="Patient Name")
         tree.column("#2", anchor=CENTER,minwidth=0, width=100, stretch=NO)
-        tree.heading("#2", text="Patient ID")
+        tree.heading("#2", text="Mobile No")
         tree.column("#3", anchor=CENTER,minwidth=0, width=100, stretch=NO)
-        tree.heading("#3", text="Date")
+        tree.heading("#3", text="Patient ID")
         tree.column("#4", anchor=CENTER,minwidth=0, width=100, stretch=NO)
-        tree.heading("#4", text="Doctor Name")
-        tree.column("#5", anchor=CENTER,minwidth=0, width=100, stretch=YES)
-        tree.heading("#5", text="Treatment Given")
-        tree.column("#6", anchor=CENTER,minwidth=0, width=120, stretch=YES)
-        tree.heading("#6", text="Additional Remarks")
+        tree.heading("#4", text="Address")
+        tree.column("#5", anchor=CENTER,minwidth=0, width=100, stretch=NO)
+        tree.heading("#5", text="Age")
+        tree.column("#6", anchor=CENTER,minwidth=0, width=100, stretch=NO)
+        tree.heading("#6", text="Gender")
 
         hsb = Scrollbar(self.root, orient="horizontal", command=tree.xview)
         hsb.place(x=150, y=428,width=500)
@@ -55,7 +44,7 @@ class Display():
         tree.pack()
         for x in result:
             tree.insert("", END, values=x)
-        self.b2= Button(self.root, text='Quit',width=10,command=self.root.destroy).place(x=350,y=460)
+        self.b2= Button(self.root, text='Quit',width=10,command=self.root.destroy).place(x=500,y=460)
 #main()
 
 '''class main(Frame):

@@ -1,9 +1,5 @@
-import mysql.connector
-import pandas as pd
-import sqlite3
 from tkinter import *
 from tkinter.ttk import *
-from pandastable import Table, TableModel
 from mysql_connector import get_connection
 def main():
     root=Tk()
@@ -47,7 +43,7 @@ class Display():
         for x in result:
             tree.insert("", END, values=x)
         self.b2= Button(self.root, text='Quit',width=10,command=self.root.destroy).place(x=350,y=460)
-#main()
+main()
 
 '''class main(Frame):
     def __init__(self, parent=None):

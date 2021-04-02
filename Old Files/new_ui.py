@@ -4,7 +4,6 @@ from tkinter import messagebox
 import datetime
 import pandas as pd
 import datetime
-import transaction
 import record_view_patientdetails
 import record_view_medicalrecord
 import record_view_selected

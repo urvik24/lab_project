@@ -1,4 +1,3 @@
-import pandas as pd
 from tkinter import *
 from tkinter.ttk import *
 from mysql_connector import get_connection

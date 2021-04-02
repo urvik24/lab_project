@@ -1,7 +1,5 @@
-import sqlite3
-
-
-db = sqlite3.connect( "project.db" )
+from mysql_connector import get_connection
+mydb = get_connection()
 mycursor=db.cursor()
 table_login = """CREATE TABLE IF NOT EXISTS`login` (
   `login_name` varchar(20) NOT NULL,
@@ -25,7 +23,6 @@ table_record ="""CREATE TABLE IF NOT EXISTS`patient_record` (
 mycursor.execute(table_login)
 mycursor.execute(table_doctor)
 mycursor.execute(table_record)
-
 db.commit()
 db.close()
 

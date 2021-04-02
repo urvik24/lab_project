@@ -58,7 +58,6 @@ class record_entry():
         self.entry_id.place(x=200,y=140)
         mycursor.execute("Select * from patient_record")
         yo = mycursor.fetchall()
-        print(type(yo))
         i = len(yo)
         self.label_id = Label(self.root, text="(Last entered Entry is No.%d)"%(i),width=20,font=("bold", 8))
         self.label_id.place(x=200,y=162)
@@ -150,8 +149,8 @@ class record_entry():
         if not ((self.entry_name.get()) and (self.entry_mobile.get()) and (self.entry_id.get()) and (self.entry_add.get()) and (self.entry_age.get()) ):
             messagebox.showinfo("ERROR","Enter Details first and then click on Submit Button")  
         else:
-            mycursor.execute("insert into doctor(id_number,doctor_name)values('%s','%s')" %(id_no,doctor_name))
-            mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender,date,doctor_name,treatment_given,additional_remarks)values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender,date,doctor_name,treatment,remarks))
+            mycursor.execute("insert into doctor(id_number,doctor_name,date,treatment_given,additional_remark)values('%s','%s','%s','%s','%s')" %(id_no,doctor_name,date,treatment,remarks))
+            mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender)values('%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender))
             mydb.commit()
             messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
             #resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
@@ -222,4 +221,4 @@ class record_entry():
     def view(self):
         record_view.main()
             
-#main()
+main()

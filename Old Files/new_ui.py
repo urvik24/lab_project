@@ -2,14 +2,19 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 import datetime
-import sqlite3
+import mysql.connector
 import pandas as pd
 import datetime
 import record_view_patientdetails
 import record_view_medicalrecord
 
 LARGEFONT = ("Verdana", 35)
-mydb = sqlite3.connect( "project.db" )
+mydb=mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="urvik9293",
+    database="lab",
+)
 mycursor=mydb.cursor()
 
 class tkinterApp(tk.Tk):

@@ -53,17 +53,14 @@ class newlogin():
 
         mycursor.execute("SELECT login_name from login WHERE login_name='%s'"%(staff_id))
         y = mycursor.fetchone()
-        if not (y):
-            messagebox.showinfo("WARNING","Enter ID")
-        else:
-            i = str(y)
-            j = "('"+staff_id+"',)"
-            if(i==j):
+        i = str(y)
+        j = "('"+staff_id+"',)"
+        if(i==j):
                 messagebox.showinfo("WARNING","ID already exists ")
                 self.entry_id.delete(0,END)
                 self.entry_pass.delete(0,END)
                 self.entry_conpass.delete(0,END)
-            else:
+        else:
                 if(password!=conpass):
                     messagebox.showinfo("WARNING","Password Doesnt Match ")
                     self.entry_pass.delete(0,END)
@@ -82,4 +79,4 @@ class newlogin():
     def back(self):
         login_main.main()
 
-main()
+#main()

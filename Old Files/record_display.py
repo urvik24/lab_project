@@ -8,7 +8,6 @@ from tkinter.ttk import *
 from tkinter import messagebox
 import record_main
 import record_view
-from pandastable import Table, TableModel
 
 
 mydb=mysql.connector.connect(

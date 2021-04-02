@@ -4,7 +4,6 @@ from tkinter import messagebox
 import record_entry
 import login_main
 import record_edit
-import record_view
 import record_display
 
 mydb=mysql.connector.connect(

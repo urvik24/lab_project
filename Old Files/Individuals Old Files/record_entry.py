@@ -8,7 +8,7 @@ import datetime
 import pandas.io.sql as sql
 import pandas as pd
 import record_main
-import record_view
+import record_view_patientdetails
 
 mydb=mysql.connector.connect(
     host="localhost",
@@ -219,6 +219,6 @@ class record_entry():
         record_main.main()
         
     def view(self):
-        record_view.main()
+        record_view_patientdetails.main()
             
-main()
+#main()

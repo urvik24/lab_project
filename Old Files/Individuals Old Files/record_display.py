@@ -7,7 +7,7 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter import messagebox
 import record_main
-import record_view
+import record_view_patientdetails
 
 
 mydb=mysql.connector.connect(

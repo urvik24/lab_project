@@ -43,4 +43,4 @@ class upd():
         record_edit_delete.main()
     def back(self):
         record_main.main()  
-main()
+#main()

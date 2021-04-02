@@ -9,25 +9,23 @@ import record_view_medicalrecord
 import record_view_selected
 from mysql_connector import get_connection
 
-LARGEFONT = ("Verdana", 35)
-
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-
+        
+        self.title("Gala Lab")
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
-        frameList = [LoginMain, Register,Record, Record_Entry, Record_Edit, Record_Update, Record_Add,Record_Delete, Record_Display]
+        frameList = [LoginMain, Record, Record_Entry, Record_Edit, Record_Update, Record_Add,Record_Delete, Record_Display]
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
         self.style = ttk.Style()
         self.style.theme_use("clam")
         self.frames = {}
-
+        
         for F in frameList:
             frame = F(container, self)
             self.frames[F] = frame
-
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(LoginMain)
@@ -40,25 +38,25 @@ class LoginMain(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.label_0 = tk.Label(self, text="LOGIN CREDENTIALS", font=("Times New Roman", 20), fg='blue')
+        self.label_0 = tk.Label(self, text="LOGIN", font=("Times New Roman", 25), fg='black')
         self.label_id = tk.Label(self, text="Staff ID", width=20, font=("bold", 10))
         self.entry_id = tk.Entry(self)
         self.label_pass = tk.Label(self, text="Password", width=20, font=("bold", 10))
         self.entry_pass = tk.Entry(self, show="*")
-        self.label_5 = tk.Label(self, text="New Account?", width=20, font=("bold", 10))
+        # self.label_5 = tk.Label(self, text="New Account?", width=20, font=("bold", 10))
         self.b = tk.Button(self, text='Submit', width=20, bg='brown', fg='white', command=lambda: self.submit(controller))
-        self.b1 = tk.Button(self, text='Register', width=20, bg='brown', fg='white', command=lambda: controller.show_frame(Register))
+        # self.b1 = tk.Button(self, text='Register', width=20, bg='brown', fg='white', command=lambda: controller.show_frame(Register))
         self.loginpage()
 
     def loginpage(self):
-        self.label_0.place(x=150,y=50)
+        self.label_0.place(x=200,y=50)
         self.label_id.place(x=80,y=130)
         self.entry_id.place(x=240,y=130)
-        self.label_pass.place(x=68,y=180)
+        self.label_pass.place(x=80,y=180)
         self.entry_pass.place(x=240,y=180)
-        self.label_5.place(x=170,y=290)
+        # self.label_5.place(x=170,y=290)
         self.b.place(x=180,y=260)
-        self.b1.place(x=180,y=320)
+        # self.b1.place(x=180,y=320)
 
     def submit(self,controller):
         a=str(self.entry_id.get())
@@ -95,7 +93,7 @@ class LoginMain(tk.Frame):
             
             mydb.close()
 
-class Register(tk.Frame):
+'''class Register(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -152,14 +150,21 @@ class Register(tk.Frame):
                 self.entry_pass.delete(0,tk.END)
                 self.entry_conpass.delete(0,tk.END)
                 controller.show_frame(LoginMain)
-        mydb.close()
+        mydb.close()'''
 class Record(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.b0= tk.Button(self, text='Log Out',width=10,bg='brown',fg='white',command=lambda: controller.show_frame(LoginMain)).place(x=400,y=20)
-        self.b= tk.Button(self, text='Create New Patient Entry',width=21,bg='brown',fg='white',command= lambda: controller.show_frame(Record_Entry)).place(x=180,y=350)
-        self.b1= tk.Button(self, text='Edit Existing Patient Record',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Edit)).place(x=180,y=400)
-        self.b2= tk.Button(self, text='View Patient Records',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Display)).place(x=180,y=450)
+        self.b= tk.Button(self, text='Create New Patient Entry',width=21,bg='brown',fg='white',command= lambda: controller.show_frame(Record_Entry)).place(x=180,y=150)
+        self.b1= tk.Button(self, text='Edit Existing Patient Record',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Edit)).place(x=180,y=200)
+        self.b2= tk.Button(self, text='View Patient Records',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Display)).place(x=180,y=250)
+        self.b3= tk.Button(self, text='Import to Excel',width=21,bg='brown',fg='white',command=lambda: self.excel()).place(x=180,y=350)
+    def excel(self):
+        Excel.excel()
+        Excel.excel1()
+        messagebox.showinfo("Success!!","All Online Data Imported")
+
+
     def direction1(self):
         record_view.main()
 
@@ -232,8 +237,8 @@ class Record_Entry(tk.Frame):
                
         self.b1= tk.Button(self, text='Submit',bg='brown',fg='white',width=15,command=lambda: self.validate(controller)).place(x=170,y=470)
         self.b2= tk.Button(self, text='Clear',bg='brown',fg='white',width=10,command=self.cleardata).place(x=270,y=470)
-        self.b3= tk.Button(self, text='View Records',bg='brown',fg='white',width=15,command=self.view).place(x=170,y=500)
-        self.b4= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda: controller.show_frame(Record)).place(x=270,y=500)
+        # self.b3= tk.Button(self, text='View Records',bg='brown',fg='white',width=15,command=self.view).place(x=170,y=500)
+        self.b4= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda: controller.show_frame(Record)).place(x=230,y=500)
 
     def validate(self,controller):
         if not self.entry_name.get():
@@ -311,9 +316,9 @@ class Record_Entry(tk.Frame):
             mydb.commit()
             mydb.close()
             messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
+            resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
             Excel.excel()
             Excel.excel1()
-            resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
             if resp == "yes":
                 self.cleardata()
             else:
@@ -329,8 +334,8 @@ class Record_Entry(tk.Frame):
         self.entry_doctor.delete(0,tk.END)
         self.entry_treatment.delete(0,tk.END)
         self.entry_remark.delete(0,tk.END)
-    def view(self):
-        record_view_patientdetails.main()
+    # def view(self):
+    #     record_view_patientdetails.main()
     def back(self,controller):
         controller.show_frame(Record)
 
@@ -620,7 +625,7 @@ class Record_Display(tk.Frame):
     def recordDisplay(self,controller):
         self.label_0.place(x=100,y=5)
         self.label_1.place(x=50,y=220)
-        self.label_2.place(x=195,y=250)
+        self.label_2.place(x=160,y=240)
         self.entry_search.place(x=170,y=300)
 
         self.cb = tk.IntVar()
@@ -628,7 +633,7 @@ class Record_Display(tk.Frame):
         #self.Combo.grid()
         self.Combo['state'] = 'readonly'
         self.Combo.current(0)
-        self.Combo.place(x=180,y=270)
+        self.Combo.place(x=190,y=270)
         
         self.b2= tk.Button(self, text='Search and Display',bg='brown',fg='white',width=25,command=lambda: self.validate(controller)).place(x=150,y=330)
         self.b3= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda:controller.show_frame(Record)).place(x=200,y=400)
@@ -642,7 +647,7 @@ class Record_Display(tk.Frame):
         elif(search == "Mobile"):
             y = "mobile"
         elif(search == "Patient Id"):
-            y = "id_number"
+            y = "doctor.id_number"
         elif(search == "Date"):
             y = "date"  
         elif(search == "Doctor Name"):
@@ -692,5 +697,7 @@ class Excel():
 
 app = tkinterApp()
 app.geometry('500x550')
-#app.resizable(0, 0)
+app.configure(bg='blue')
+#app.iconphoto(tk.PhotoImage(file="C:\\Users\\Dharmesh Shah\\Desktop\\lab_project\\Main\\icons.ico"))
+app.resizable(0, 0)
 app.mainloop()

@@ -3,9 +3,9 @@ import mysql.connector
 
 def get_connection():
     mydb=mysql.connector.connect(
-        host="localhost",
-        user="root",
+        host="nle.obl.mybluehost.me",
+        user="nleoblmy_urvik",
         password="urvik9293",
-        database="lab",
+        database="nleoblmy_lab",
     )
     return mydb

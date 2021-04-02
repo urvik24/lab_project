@@ -19,9 +19,7 @@ class Display():
         mycursor = mydb.cursor() 
         mycursor.execute( "select * from patient_record" )
         result = mycursor.fetchall()
-        mydb.close()
-        df = pd.DataFrame(result)
-        
+        mydb.close()        
         tree = Treeview(self.root,height = 20, column=("c1", "c2", "c3","c4","c5","c6"), show='headings')
         #style.configure("Treeview",background="white",foreground="black",fieldbackground="silver")
         #style.map("Treeview",background=[('selected','blue')])

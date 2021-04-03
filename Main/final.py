@@ -7,13 +7,14 @@ import datetime
 import record_view_patientdetails
 import record_view_medicalrecord
 import record_view_selected
+from PIL import ImageTk,Image
 from mysql_connector import get_connection
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        
-        self.title("Gala Lab")
+        self.title("Jeevan Jyot Medical Center")
+        self.wm_iconbitmap('icons.ico')
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         frameList = [LoginMain, Record, Record_Entry, Record_Edit, Record_Update, Record_Add,Record_Delete, Record_Display]
@@ -33,12 +34,16 @@ class tkinterApp(tk.Tk):
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
-
+class Logo():
+    def logo(self):
+        self.img = ImageTk.PhotoImage(Image.open("photo.png"))
+        self.panel = tk.Label(self, image = self.img , width = 110, height = 110)
+        self.panel.place(x=200, y=5)
 class LoginMain(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.label_0 = tk.Label(self, text="LOGIN", font=("Times New Roman", 25), fg='black')
+        #self.label_0 = tk.Label(self, text="LOGIN", font=("Times New Roman", 25), fg='black')
         self.label_id = tk.Label(self, text="Staff ID", width=20, font=("bold", 10))
         self.entry_id = tk.Entry(self)
         self.label_pass = tk.Label(self, text="Password", width=20, font=("bold", 10))
@@ -46,10 +51,12 @@ class LoginMain(tk.Frame):
         # self.label_5 = tk.Label(self, text="New Account?", width=20, font=("bold", 10))
         self.b = tk.Button(self, text='Submit', width=20, bg='brown', fg='white', command=lambda: self.submit(controller))
         # self.b1 = tk.Button(self, text='Register', width=20, bg='brown', fg='white', command=lambda: controller.show_frame(Register))
+        Logo.logo(self)
+        
         self.loginpage()
 
     def loginpage(self):
-        self.label_0.place(x=200,y=50)
+        #self.label_0.place(x=200,y=50)
         self.label_id.place(x=80,y=130)
         self.entry_id.place(x=240,y=130)
         self.label_pass.place(x=80,y=180)
@@ -159,6 +166,8 @@ class Record(tk.Frame):
         self.b1= tk.Button(self, text='Edit Existing Patient Record',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Edit)).place(x=180,y=200)
         self.b2= tk.Button(self, text='View Patient Records',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Display)).place(x=180,y=250)
         self.b3= tk.Button(self, text='Import to Excel',width=21,bg='brown',fg='white',command=lambda: self.excel()).place(x=180,y=350)
+        Logo.logo(self)
+
     def excel(self):
         Excel.excel()
         Excel.excel1()
@@ -238,7 +247,7 @@ class Record_Entry(tk.Frame):
         self.b1= tk.Button(self, text='Submit',bg='brown',fg='white',width=15,command=lambda: self.validate(controller)).place(x=170,y=470)
         self.b2= tk.Button(self, text='Clear',bg='brown',fg='white',width=10,command=self.cleardata).place(x=270,y=470)
         # self.b3= tk.Button(self, text='View Records',bg='brown',fg='white',width=15,command=self.view).place(x=170,y=500)
-        self.b4= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda: controller.show_frame(Record)).place(x=230,y=500)
+        self.b4= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda: controller.show_frame(Record)).place(x=220,y=500)
 
     def validate(self,controller):
         if not self.entry_name.get():
@@ -342,32 +351,36 @@ class Record_Entry(tk.Frame):
 class Record_Edit(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        Logo.logo(self)
+
         self.recordEdit(controller)
 
     def recordEdit(self,controller):
         self.label_0 = tk.Label(self, text="Modify Existing Record",width = 25,font=("Times New Roman", 20))
-        self.label_0.place(x=60,y=30)
-        self.b0= tk.Button(self, text='Update Patient Details',width=20,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Update)).place(x=175,y=100)
-        self.b1= tk.Button(self, text='Add Medical Record',width=20,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Add)).place(x=175,y=150)
-        self.b2= tk.Button(self, text='Delete Record',width=20,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Delete)).place(x=175,y=200)
-        self.b3= tk.Button(self, text='Back',width=10,bg='brown',fg='white',command=lambda: controller.show_frame(Record)).place(x=205,y=250)
+        self.label_0.place(x=75,y=130)
+        self.b0= tk.Button(self, text='Update Patient Details',width=20,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Update)).place(x=175,y=200)
+        self.b1= tk.Button(self, text='Add Medical Record',width=20,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Add)).place(x=175,y=250)
+        self.b2= tk.Button(self, text='Delete Record',width=20,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Delete)).place(x=175,y=300)
+        self.b3= tk.Button(self, text='Back',width=10,bg='brown',fg='white',command=lambda: controller.show_frame(Record)).place(x=205,y=430)
 
 class Record_Update(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        Logo.logo(self)
+
         self.recordUpdate(controller)
 
     def recordUpdate(self,controller):
         self.label_0 = tk.Label(self, text="Update Record",width =20,font=("Times New Roman", 20))
-        self.label_0.place(x=80,y=80)
+        self.label_0.place(x=80,y=120)
         self.label_name = tk.Label(self, text="Enter Patient Name",width=20,font=("bold", 10))
-        self.label_name.place(x=80,y=140)
+        self.label_name.place(x=80,y=170)
         self.label_id = tk.Label(self, text="Enter Patient ID",width=20,font=("bold", 10))
-        self.label_id.place(x=80,y=180)
+        self.label_id.place(x=80,y=210)
         self.entry_1 = tk.Entry(self)
-        self.entry_1.place(x=240,y=140)
+        self.entry_1.place(x=240,y=170)
         self.entry_2 = tk.Entry(self)
-        self.entry_2.place(x=240,y=180)
+        self.entry_2.place(x=240,y=210)
     
         self.label_x = tk.Label(self, text="Select the Entry you want to Update",width=30,font=("bold", 10))
         self.label_x.place(x=110,y=250)
@@ -454,41 +467,42 @@ class Record_Update(tk.Frame):
 class Record_Add(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        Logo.logo(self)
         self.add(controller)
     def add(self,controller):
         self.label_0 = tk.Label(self, text="Add Medical Details",width =20,font=("Times New Roman", 20))
-        self.label_0.place(x=80,y=80)
+        self.label_0.place(x=80,y=120)
         self.label_name = tk.Label(self, text="Enter Patient Name",width=20,font=("bold", 10))
-        self.label_name.place(x=80,y=150)
+        self.label_name.place(x=80,y=170)
         self.label_id = tk.Label(self, text="Enter Patient ID",width=20,font=("bold", 10))
-        self.label_id.place(x=80,y=180)
+        self.label_id.place(x=80,y=200)
         self.entry_1 = tk.Entry(self)
-        self.entry_1.place(x=240,y=150)
+        self.entry_1.place(x=240,y=170)
         self.entry_2 = tk.Entry(self)
-        self.entry_2.place(x=240,y=180)
+        self.entry_2.place(x=240,y=200)
 
         self.label_date = tk.Label(self, text="Date",width=20,font=("bold", 10))
-        self.label_date.place(x=80,y=220)
+        self.label_date.place(x=80,y=230)
         self.x = datetime.datetime.now().strftime("%d-%m-%Y")
 
         self.label_date1 = tk.Label(self, text=self.x,width=20,font=("bold", 10))
-        self.label_date1.place(x=200,y=220)
+        self.label_date1.place(x=200,y=230)
 
         self.label_doctor = tk.Label(self, text="Doctor Name ",width=20,font=("bold", 10))
-        self.label_doctor.place(x=80,y=250)
+        self.label_doctor.place(x=80,y=260)
         self.entry_doctor = tk.Entry(self)
-        self.entry_doctor.place(x=240,y=250)
+        self.entry_doctor.place(x=240,y=260)
 
         self.label_treatment = tk.Label(self, text="Treatment Given",width=20,font=("bold", 10))
-        self.label_treatment.place(x=80,y=280)
+        self.label_treatment.place(x=80,y=290)
         self.entry_treatment = tk.Entry(self,width=40)
-        self.entry_treatment.place(x=240,y=280)
+        self.entry_treatment.place(x=240,y=290)
 
         self.label_remark = tk.Label(self, text="Additional Remarks",width=20,font=("bold", 10))
-        self.label_remark.place(x=80,y=310)
+        self.label_remark.place(x=80,y=320)
         self.entry_remark = tk.Entry(self,width=40)
-        self.entry_remark.place(x=240,y=310)
-        self.b2= tk.Button(self, text='Submit',width=15,bg='brown',fg='white',command=self.addsql).place(x=180,y=350)
+        self.entry_remark.place(x=240,y=320)
+        self.b2= tk.Button(self, text='Submit',width=15,bg='brown',fg='white',command=self.addsql).place(x=180,y=360)
         self.b0= tk.Button(self, text='Back',width=15,bg='brown',fg='white',command=lambda: self.back(controller)).place(x=180,y=430)
     def addsql(self):
         x = self.entry_1.get()
@@ -552,19 +566,21 @@ class Record_Add(tk.Frame):
 class Record_Delete(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        Logo.logo(self)
+
         self.delete(controller)
     def delete(self,controller):
         self.label_0 = tk.Label(self, text="Delete Record",width = 20,font=("Times New Roman", 20))
-        self.label_0.place(x=80,y=80)
+        self.label_0.place(x=80,y=120)
         self.label_name = tk.Label(self, text="Enter Patient Name",width=20,font=("bold", 10))
-        self.label_name.place(x=80,y=140)
+        self.label_name.place(x=80,y=200)
         self.label_id = tk.Label(self, text="Enter Patient ID",width=20,font=("bold", 10))
-        self.label_id.place(x=80,y=180)
+        self.label_id.place(x=80,y=240)
         self.entry_1 = tk.Entry(self)
-        self.entry_1.place(x=240,y=140)
+        self.entry_1.place(x=240,y=200)
         self.entry_2 = tk.Entry(self)
-        self.entry_2.place(x=240,y=180)
-        self.b1= tk.Button(self, text='Submit',width=15,bg='brown',fg='white',command=self.deletevalidate).place(x=180,y=230)
+        self.entry_2.place(x=240,y=240)
+        self.b1= tk.Button(self, text='Submit',width=15,bg='brown',fg='white',command=self.deletevalidate).place(x=180,y=300)
         self.b0= tk.Button(self, text='Back',width=15,bg='brown',fg='white',command=lambda: self.back(controller)).place(x=180,y=430)
     def deletevalidate(self):
         x = self.entry_1.get()
@@ -613,9 +629,10 @@ class Record_Delete(tk.Frame):
 class Record_Display(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        Logo.logo(self)
         self.label_0 = tk.Label(self, text="RECORD DISPLAY",width = 20,font=("Times New Roman", 20))
-        self.b0= tk.Button(self, text='View Patient Details',bg='brown',fg='white',width=20,command=self.all).place(x=170,y=85)
-        self.b1= tk.Button(self, text='View All Medical Records',bg='brown',fg='white',width=20,command=self.all1).place(x=170,y=125)
+        self.b0= tk.Button(self, text='View Patient Details',bg='brown',fg='white',width=20,command=self.all).place(x=170,y=170)
+        self.b1= tk.Button(self, text='View All Medical Records',bg='brown',fg='white',width=20,command=self.all1).place(x=170,y=210)
         self.label_1 = tk.Label(self, text="TO DISPLAY SINGLE RECORD",width = 50,font=("Times New Roman", 10))
         self.label_2 = tk.Label(self, text="Search By",width = 20) 
         self.entry_search = tk.Entry(self)       
@@ -623,20 +640,20 @@ class Record_Display(tk.Frame):
         self.recordDisplay(controller)
     
     def recordDisplay(self,controller):
-        self.label_0.place(x=100,y=5)
-        self.label_1.place(x=50,y=220)
-        self.label_2.place(x=160,y=240)
-        self.entry_search.place(x=170,y=300)
+        self.label_0.place(x=100,y=120)
+        self.label_1.place(x=70,y=250)
+        self.label_2.place(x=165,y=270)
+        self.entry_search.place(x=180,y=300)
 
         self.cb = tk.IntVar()
         self.Combo = ttk.Combobox(self,textvariable=self.cb,width=12, values = ('Patient Name','Mobile','Patient Id','Date','Doctor Name'))
         #self.Combo.grid()
         self.Combo['state'] = 'readonly'
         self.Combo.current(0)
-        self.Combo.place(x=190,y=270)
+        self.Combo.place(x=200,y=330)
         
-        self.b2= tk.Button(self, text='Search and Display',bg='brown',fg='white',width=25,command=lambda: self.validate(controller)).place(x=150,y=330)
-        self.b3= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda:controller.show_frame(Record)).place(x=200,y=400)
+        self.b2= tk.Button(self, text='Search and Display',bg='brown',fg='white',width=20,command=lambda: self.validate(controller)).place(x=170,y=360)
+        self.b3= tk.Button(self, text='Back',bg='brown',fg='white',width=10,command=lambda:controller.show_frame(Record)).place(x=200,y=430)
         
     def validate(self,controller):
         search = self.Combo.get()
@@ -697,7 +714,5 @@ class Excel():
 
 app = tkinterApp()
 app.geometry('500x550')
-app.configure(bg='blue')
-#app.iconphoto(tk.PhotoImage(file="C:\\Users\\Dharmesh Shah\\Desktop\\lab_project\\Main\\icons.ico"))
 app.resizable(0, 0)
 app.mainloop()

@@ -3,7 +3,6 @@ from tkinter import ttk
 from tkinter import messagebox
 import datetime
 import pandas as pd
-import datetime
 import record_view_patientdetails
 import record_view_medicalrecord
 import record_view_selected
@@ -13,7 +12,7 @@ from mysql_connector import get_connection
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.title("Jeevan Jyot Medical Center")
+        self.title("Matushri Lilbai Maganlal Gala Charitable Trust")
         self.wm_iconbitmap('icons.ico')
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -38,7 +37,7 @@ class Logo():
     def logo(self):
         self.img = ImageTk.PhotoImage(Image.open("photo.png"))
         self.panel = tk.Label(self, image = self.img , width = 110, height = 110)
-        self.panel.place(x=200, y=5)
+        self.panel.place(x=320, y=5)
 class LoginMain(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -161,11 +160,13 @@ class LoginMain(tk.Frame):
 class Record(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.b0= tk.Button(self, text='Log Out',width=10,bg='brown',fg='white',command=lambda: controller.show_frame(LoginMain)).place(x=400,y=20)
-        self.b= tk.Button(self, text='Create New Patient Entry',width=21,bg='brown',fg='white',command= lambda: controller.show_frame(Record_Entry)).place(x=180,y=150)
-        self.b1= tk.Button(self, text='Edit Existing Patient Record',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Edit)).place(x=180,y=200)
-        self.b2= tk.Button(self, text='View Patient Records',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Display)).place(x=180,y=250)
-        self.b3= tk.Button(self, text='Import to Excel',width=21,bg='brown',fg='white',command=lambda: self.excel()).place(x=180,y=350)
+        self.b0= tk.Button(self, text='Log Out',width=10,bg='brown',fg='white',command=lambda: controller.show_frame(LoginMain)).place(x=600,y=20)
+        self.b= tk.Button(self, text='Create New Patient Entry',width=21,bg='brown',fg='white',command= lambda: controller.show_frame(Record_Entry)).place(x=300,y=150)
+        self.b1= tk.Button(self, text='Edit Existing Patient Record',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Edit)).place(x=300,y=200)
+        self.b2= tk.Button(self, text='View Patient Records',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Display)).place(x=300,y=250)
+        self.b3= tk.Button(self, text='Import to Excel',width=21,bg='brown',fg='white',command=lambda: self.excel()).place(x=300,y=350)
+        self.b4= tk.Button(self, text='Generate Bill',width=21,bg='brown',fg='white',command=lambda: self.excel()).place(x=300,y=390)
+
         Logo.logo(self)
 
     def excel(self):
@@ -211,6 +212,15 @@ class Record_Entry(tk.Frame):
         self.entry_mobile.place(x=251,y=100)
         self.label_id.place(x=50,y=140)
         self.entry_id.place(x=200,y=140)
+        '''mydb = get_connection()
+        mycursor = mydb.cursor()
+        mycursor.execute("Select * from patient_record")
+        yo = mycursor.fetchall()
+        i = len(yo)
+        self.label_idno = tk.Label(self, text="(Last entered Entry is No.%d)"%(i),width=20,font=("bold", 8))
+        self.label_idno.place(x=200,y=162)
+        mydb.close()'''
+
         self.label_add.place(x=50,y=180)
         self.entry_add.place(x=200,y=180)
         self.label_age.place(x=50,y=220)
@@ -324,10 +334,11 @@ class Record_Entry(tk.Frame):
             mycursor.execute("insert into patient_record(patient_name,mobile,id_number,address,age,gender)values('%s','%s','%s','%s','%s','%s')" %(name,mobile,id_no,address,age,gender))
             mydb.commit()
             mydb.close()
-            messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
-            resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
             Excel.excel()
             Excel.excel1()
+            messagebox.showinfo("MESSAGE","Record Inserted Successfully!!")
+            resp = messagebox.askquestion("Record Inserted", "Do you want to insert a new Entry?")
+
             if resp == "yes":
                 self.cleardata()
             else:
@@ -713,6 +724,6 @@ class Excel():
         df1.to_csv('Patient Details.csv')   
 
 app = tkinterApp()
-app.geometry('500x550')
+app.geometry('750x750')
 app.resizable(0, 0)
 app.mainloop()

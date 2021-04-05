@@ -1,0 +1,7 @@
+,Patient Name,Patient Id,Date,Doctor Name,Treatment Given,Additional Remarks
+1,Urvik,1,05-04-2021,Dr Shah,Null,Null
+2,Urvik,1,05-04-2021,Dr X,Vaccine,NONE
+3,Ishani,2,05-04-2021,Dr Shah,Vaccine,Null
+4,Unnati,3,05-04-2021,Dr X,Null,Null
+5,Bhavya,4,05-04-2021,Dr Shah,qwerty,Null
+6,Meet,5,05-04-2021,Dr X,Vaccine,Null

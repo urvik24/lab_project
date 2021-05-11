@@ -544,7 +544,7 @@ class Record_Edit(tk.Frame):
         self.label_0 = tk.Label(self, text="Modify Existing Record",width = 25,font=("Times New Roman", 20))
         self.label_0.place(x=75,y=130)
         self.b0= tk.Button(self, text='Update Patient Details',width=25,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Update)).place(x=175,y=200)
-        self.b1= tk.Button(self, text='Add New Doctor/Treatment Entry',width=25,bg='brown',fg='white',command= lambda: controller.show_frame(Doc)).place(x=200,y=250)
+        self.b1= tk.Button(self, text='Add New Doctor/Treatment Entry',width=25,bg='brown',fg='white',command= lambda: controller.show_frame(Doc)).place(x=175,y=250)
         self.b2= tk.Button(self, text='Delete Record',width=25,bg='brown',fg='white',command=lambda: controller.show_frame(Record_Delete)).place(x=175,y=300)
         self.b3= tk.Button(self, text='Back',width=10,bg='brown',fg='white',command=lambda: controller.show_frame(Record)).place(x=205,y=430)
 

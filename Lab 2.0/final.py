@@ -9,6 +9,7 @@ import record_view_medicalrecord
 import record_view_selected
 import record_view_doctor
 import record_view_selected_doctor
+#import record_graph
 from PIL import ImageTk,Image
 from mysql_connector import get_connection
 
@@ -102,7 +103,7 @@ class LoginMain(tk.Frame):
             
             mydb.close()
 
-'''class Register(tk.Frame):
+class Register(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -159,7 +160,7 @@ class LoginMain(tk.Frame):
                 self.entry_pass.delete(0,tk.END)
                 self.entry_conpass.delete(0,tk.END)
                 controller.show_frame(LoginMain)
-        mydb.close()'''
+        mydb.close()
 
 class Record(tk.Frame):
     def __init__(self, parent, controller):
@@ -172,12 +173,16 @@ class Record(tk.Frame):
         self.b4= tk.Button(self, text='View Doctor Records',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Doctor_Display)).place(x=300,y=350)
         self.b5= tk.Button(self, text='Import to Excel',width=21,bg='brown',fg='white',command=lambda: self.excel()).place(x=300,y=430)
         self.b6= tk.Button(self, text='Generate Bill',width=21,bg='brown',fg='white',command=lambda: controller.show_frame(Bill)).place(x=300,y=460)
+        #self.b7= tk.Button(self, text='Display Graph',width=21,bg='brown',fg='white',command=lambda: self.graph()).place(x=300,y=490)
         Logo.logo(self)
 
     def excel(self):
         Excel.excel()
         Excel.excel1()
         messagebox.showinfo("Success!!","All Online Data Imported")
+
+    def graph(self):
+        record_graph.main()
 
 
     def direction1(self):

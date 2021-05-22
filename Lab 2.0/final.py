@@ -342,7 +342,7 @@ class Record_Entry(tk.Frame):
         address = str(self.entry_add.get())
         age = str(self.entry_age.get())
         gender = str(self.Combo1.get())
-        date = str(self.x)
+        #date = str(self.x)
         '''doctor_name = str(self.entry_doctor.get())
         if(mobile1 == ""):
             mobile1 = "Null"
@@ -974,7 +974,7 @@ class Bill(tk.Frame):
         self.Combo2.place(x=240,y=360)
 
         self.b2= tk.Button(self, text='Submit',bg='brown',fg='white',width=20,command=self.doctorbill).place(x=170,y=390)
-        self.b3= tk.Button(self, text='Back',bg='brown',fg='white',width=20,command=self.back(controller)).place(x=170,y=460)
+        self.b3 = tk.Button(self, text='Back',bg='brown',fg='white',width=20,command=self.back(controller)).place(x=170,y=460)
     def patientbill(self):
         x = self.entry_1.get()
         y = self.entry_2.get()
@@ -1037,11 +1037,11 @@ class Bill(tk.Frame):
         print(r)
     
     def back(self,controller):
-        self.entry_1.delete(0,tk.END)
-        self.entry_2.delete(0,tk.END)
-        self.Combo.current(0)
-        self.Combo1.current(0)
-        self.Combo2.current(0)
+        #self.entry_1.delete(0,tk.END)
+        #self.entry_2.delete(0,tk.END)
+        #self.Combo.current(0)
+        #self.Combo1.current(0)
+        #self.Combo2.current(0)
         controller.show_frame(Record)
 
 class Excel():
